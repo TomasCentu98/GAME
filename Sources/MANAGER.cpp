@@ -3,6 +3,8 @@
 
 void app() {
 
-    pantalla();
+   PANTALLA pantalla;
+
+   pantalla.gameLoop();
 
 }

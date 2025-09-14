@@ -1,6 +1,17 @@
-#ifndef MAPA_H_INCLUDED
-#define MAPA_H_INCLUDED
+#pragma once
 
-void pantalla();
+class PANTALLA
+{
+public:
+    PANTALLA();
+    void gameLoop();
+    float getAncho();
+    float getLargo();
+    ~PANTALLA();
 
-#endif // MAPA_H_INCLUDED
+private:
+    const float _ANCHO = 1280;
+    const float _LARGO = 720;
+
+
+};

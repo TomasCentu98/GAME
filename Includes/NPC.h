@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "stdlib.h"
+#include "time.h"
 
 /// CLASE BASE NPC
 class NPC : public sf::Drawable {
@@ -23,11 +25,13 @@ class NPC : public sf::Drawable {
         void recibirGolpe(float);
 
     private:
+        float generarFuerza(float);
         const char *_dialogo;
         const char *_nombre;
         float _vida;
         float _fuerza;
         /****/
+        sf::Vector2f _spriteSize;
         sf::Sprite _sprite;
         sf::Texture _textura;
         sf::Vector2f _velocidad;

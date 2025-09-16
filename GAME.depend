@@ -561,7 +561,7 @@
 
 1757812587 c:\users\tomy\documents\github\game\includes\manager.h
 
-1757882801 c:\users\tomy\documents\github\game\includes\mapa.h
+1758060255 c:\users\tomy\documents\github\game\includes\mapa.h
 
 1757882616 source:c:\users\tomy\documents\github\game\sources\mapa.cpp
 	"../Includes/NPC.h"
@@ -1079,12 +1079,12 @@
 1757426469 c:\users\tomy\documents\github\game\sfml\include\sfml\system\sleep.hpp
 	<SFML/System/Export.hpp>
 
-1757883687 source:c:\users\tomy\documents\github\game\sources\npc.cpp
+1758059658 source:c:\users\tomy\documents\github\game\sources\npc.cpp
 	<iostream>
 	"../Includes/NPC.h"
 	"../Includes/MAPA.h"
 
-1757881436 c:\users\tomy\documents\github\game\includes\npc.h
+1757983901 c:\users\tomy\documents\github\game\includes\npc.h
 	<SFML/Graphics.hpp>
 
 1757812746 source:c:\users\tomy\documents\github\game\main.cpp

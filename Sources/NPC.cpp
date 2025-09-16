@@ -6,12 +6,10 @@ NPC::NPC() :
     _textura("IMG/link.png"),
     _sprite(_textura)
 {
-    sf::Vector2f spriteSize(_sprite.getTexture().getSize());
-    _spriteSize = spriteSize;
-    _sprite.setOrigin({_spriteSize.x / 2.f, _spriteSize.y / 2.f});
+    _sprite.setOrigin({_sprite.getTexture().getSize().x / 2.f, _sprite.getTexture().getSize().y / 2.f});
 
     _vida = 100.f;
-    _fuerza = 1.f;
+    _fuerza = 5.f;
 }
 
 void NPC::setVida (float vida){
@@ -63,21 +61,24 @@ void NPC::actualizar() {
     _velocidad = {0, 0};
 
     PANTALLA* screen = new PANTALLA;
-    float espX = screen->getAncho() - _spriteSize.x;
-    float espY = screen->getLargo() - _spriteSize.y;
 
     // EVITA QUE SALGA DE PANTALLA
+
+    // PANTALLA IZQUIERDA
     if(_sprite.getGlobalBounds().getCenter().x < _sprite.getOrigin().x) {
         _sprite.setPosition({_sprite.getOrigin().x, _sprite.getPosition().y});
     }
+    // PANTALLA ARRIBA
     if(_sprite.getGlobalBounds().getCenter().y < _sprite.getOrigin().y) {
         _sprite.setPosition({_sprite.getPosition().x, _sprite.getOrigin().y});
     }
-    if(_sprite.getGlobalBounds().getCenter().x  > espX) {
-        _sprite.setPosition({espX, _sprite.getPosition().y});
+    // PANTALLA ABAJO
+    if(_sprite.getGlobalBounds().getCenter().y > screen->getLargo() - _sprite.getOrigin().y) {
+        _sprite.setPosition({_sprite.getPosition().x , screen->getLargo() - _sprite.getOrigin().y});
     }
-    if(_sprite.getGlobalBounds().getCenter().y > espY) {
-        _sprite.setPosition({_sprite.getPosition().x, espY});
+    // PANTALLA DERECHA
+    if(_sprite.getGlobalBounds().getCenter().x > screen->getAncho() - _sprite.getOrigin().x) {
+        _sprite.setPosition({screen->getAncho() - _sprite.getOrigin().x , _sprite.getPosition().y});
     }
 
     // TECLAS DE MOVIMIENTO

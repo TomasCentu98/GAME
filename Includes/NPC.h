@@ -28,7 +28,6 @@ class NPC : public sf::Drawable {
         float _vida;
         float _fuerza;
         /****/
-        sf::Vector2f _spriteSize;
         sf::Sprite _sprite;
         sf::Texture _textura;
         sf::Vector2f _velocidad;

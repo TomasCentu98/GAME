@@ -5,6 +5,7 @@
 		<Option title="GAME" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="Sources/" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/GAME" prefix_auto="1" extension_auto="1" />
@@ -14,6 +15,8 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="./" />
+					<Add directory="Sources" />
+					<Add directory="Includes" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -24,6 +27,8 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="./" />
+					<Add directory="Sources" />
+					<Add directory="Includes" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -46,11 +51,13 @@
 		<Unit filename="Includes/MANAGER.h" />
 		<Unit filename="Includes/MAPA.h" />
 		<Unit filename="Includes/NPC.h" />
+		<Unit filename="Includes/PANTALLA.h" />
 		<Unit filename="Sources/ENEMIGO.cpp" />
 		<Unit filename="Sources/HEROE.cpp" />
 		<Unit filename="Sources/MANAGER.cpp" />
 		<Unit filename="Sources/MAPA.cpp" />
 		<Unit filename="Sources/NPC.cpp" />
+		<Unit filename="Sources/PANTALLA.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>

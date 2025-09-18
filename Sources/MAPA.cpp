@@ -1,42 +1,47 @@
-#include "../Includes/NPC.h"
 #include "../Includes/MAPA.h"
 
-/// CONSTRUCTOR DEFAULT
-PANTALLA::PANTALLA() { };
+bool MAPA::load(const std::filesystem::path& tileset, sf::Vector2u azulejosSize, const int* azulejos, unsigned int width, unsigned int height) {
 
-/// CREA PANTALLA
-void PANTALLA::gameLoop() {
+    if (!_tileset.loadFromFile(tileset)) return false;
 
-    sf::RenderWindow window(sf::VideoMode({_ANCHO, _LARGO}), "My GAME");
-    window.setFramerateLimit(60);
+    _vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
+    _vertices.resize(width * height * 6);
 
-    // DEFINICION E IMAGEN DEL PERSONAJE
-    NPC entidad;
-    entidad.setSprite("IMG/link.png");
-
-    // GAME LOOP
-    while (window.isOpen()) {
-
-        while (const std::optional event = window.pollEvent())
+    for (int i = 0; i < width; ++i)
+    {
+        for (int j = 0; j < height; ++j)
         {
-            if (event->is<sf::Event::Closed>()) window.close();
+            const int azulejosN = azulejos[i + j * width];
+
+            const int tu = azulejosN % (_tileset.getSize().x / azulejosSize.x);
+            const int tv = azulejosN / (_tileset.getSize().x / azulejosSize.x);
+
+            sf::Vertex* triangles = &_vertices[(i + j * width) * 6];
+
+            triangles[0].position = sf::Vector2f(i * azulejosSize.x, j * azulejosSize.y);
+            triangles[1].position = sf::Vector2f((i + 1) * azulejosSize.x, j * azulejosSize.y);
+            triangles[2].position = sf::Vector2f(i * azulejosSize.x, (j + 1) * azulejosSize.y);
+            triangles[3].position = sf::Vector2f(i * azulejosSize.x, (j + 1) * azulejosSize.y);
+            triangles[4].position = sf::Vector2f((i + 1) * azulejosSize.x, j * azulejosSize.y);
+            triangles[5].position = sf::Vector2f((i + 1) * azulejosSize.x, (j + 1) * azulejosSize.y);
+
+            triangles[0].texCoords = sf::Vector2f(tu * azulejosSize.x, tv * azulejosSize.y);
+            triangles[1].texCoords = sf::Vector2f((tu + 1) * azulejosSize.x, tv * azulejosSize.y);
+            triangles[2].texCoords = sf::Vector2f(tu * azulejosSize.x, (tv + 1) * azulejosSize.y);
+            triangles[3].texCoords = sf::Vector2f(tu * azulejosSize.x, (tv + 1) * azulejosSize.y);
+            triangles[4].texCoords = sf::Vector2f((tu + 1) * azulejosSize.x, tv * azulejosSize.y);
+            triangles[5].texCoords = sf::Vector2f((tu + 1) * azulejosSize.x, (tv + 1) * azulejosSize.y);
         }
-
-        entidad.actualizar();
-
-        window.clear(sf::Color::Black);
-        window.draw(entidad);
-        window.display();
     }
-};
 
-float PANTALLA::getAncho() {
-    return _ANCHO;
-};
+    return true;
+}
 
+void MAPA::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
-float PANTALLA::getLargo() {
-    return _LARGO;
-};
+    states.transform *= getTransform();
 
-PANTALLA::~PANTALLA() {};
+    states.texture = &_tileset;
+
+    target.draw(_vertices, states);
+}

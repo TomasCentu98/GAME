@@ -1,8 +1,18 @@
 #pragma once
+class HEROE;
 #include "NPC.h"
 #include "HEROE.h"
-class Enemigo : public NPC{
-    protected:
-            void golpear(Heroe);
 
+class ENEMIGO : public NPC {
+
+    public:
+        ENEMIGO();
+        void golpear(HEROE);
+        void recibirGolpe(float);
+        bool finBatalla();
+    private:
+        sf::Vector2f _spriteSize;
+        sf::Sprite _sprite;
+        sf::Texture _textura;
+        sf::Vector2f _velocidad;
 };

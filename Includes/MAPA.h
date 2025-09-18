@@ -1,17 +1,13 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 
-class PANTALLA
-{
+class MAPA : public sf::Drawable, public sf::Transformable {
 public:
-    PANTALLA();
-    void gameLoop();
-    float getAncho();
-    float getLargo();
-    ~PANTALLA();
+    bool load(const std::filesystem::path& tileset, sf::Vector2u tileSize, const int* tiles, unsigned int, unsigned int);
 
 private:
-    const float _ANCHO = 1280;
-    const float _LARGO = 720;
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-
+    sf::VertexArray _vertices;
+    sf::Texture _tileset;
 };

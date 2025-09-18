@@ -545,26 +545,30 @@
 	"../Includes/MANAGER.h"
 	"../Includes/MAPA.h"
 
-1757812682 source:c:\users\tomy\documents\github\game\sources\enemigo.cpp
+1758076070 source:c:\users\tomy\documents\github\game\sources\enemigo.cpp
 	"../Includes/ENEMIGO.h"
 
-1757812442 c:\users\tomy\documents\github\game\includes\enemigo.h
+1758075413 c:\users\tomy\documents\github\game\includes\enemigo.h
+	"NPC.h"
+	"HEROE.h"
 
-1757812686 source:c:\users\tomy\documents\github\game\sources\heroe.cpp
+1758076061 source:c:\users\tomy\documents\github\game\sources\heroe.cpp
 	"../Includes/HEROE.h"
 
-1757812363 c:\users\tomy\documents\github\game\includes\heroe.h
+1758075387 c:\users\tomy\documents\github\game\includes\heroe.h
+	"NPC.h"
+	"ENEMIGO.h"
 
-1757875094 source:c:\users\tomy\documents\github\game\sources\manager.cpp
+1758148412 source:c:\users\tomy\documents\github\game\sources\manager.cpp
 	"../Includes/MANAGER.h"
-	"../Includes/MAPA.h"
+	"../Includes/PANTALLA.h"
 
-1757812587 c:\users\tomy\documents\github\game\includes\manager.h
+1758148152 c:\users\tomy\documents\github\game\includes\manager.h
 
-1758060255 c:\users\tomy\documents\github\game\includes\mapa.h
+1758150611 c:\users\tomy\documents\github\game\includes\mapa.h
+	<SFML/Graphics.hpp>
 
-1757882616 source:c:\users\tomy\documents\github\game\sources\mapa.cpp
-	"../Includes/NPC.h"
+1758150877 source:c:\users\tomy\documents\github\game\sources\mapa.cpp
 	"../Includes/MAPA.h"
 
 1757426469 c:\users\tomy\documents\github\game\sfml\include\sfml\graphics.hpp
@@ -1079,16 +1083,33 @@
 1757426469 c:\users\tomy\documents\github\game\sfml\include\sfml\system\sleep.hpp
 	<SFML/System/Export.hpp>
 
-1758059658 source:c:\users\tomy\documents\github\game\sources\npc.cpp
-	<iostream>
+1758155367 source:c:\users\tomy\documents\github\game\sources\npc.cpp
 	"../Includes/NPC.h"
-	"../Includes/MAPA.h"
+	"../Includes/PANTALLA.h"
 
-1757983901 c:\users\tomy\documents\github\game\includes\npc.h
+1758154808 c:\users\tomy\documents\github\game\includes\npc.h
 	<SFML/Graphics.hpp>
 
-1757812746 source:c:\users\tomy\documents\github\game\main.cpp
+1758148452 source:c:\users\tomy\documents\github\game\main.cpp
 	<iostream>
+	<stdlib.h>
+	<ctime>
 	"Includes/MANAGER.h"
-	"Includes/NPC.h"
+
+1758148212 source:c:\users\tomy\documents\github\game\includes\pantalla.cpp
+	"../Includes/NPC.h"
+	"PANTALLA.h"
+
+1758148061 c:\users\tomy\documents\github\game\sources\pantalla.h
+
+1758149978 c:\users\tomy\documents\github\game\includes\pantalla.h
+
+1758157366 source:c:\users\tomy\documents\github\game\sources\pantalla.cpp
+	"../Includes/NPC.h"
+	"../Includes/MAPA.h"
+	"../Includes/PANTALLA.h"
+	"HEROE.h"
+	<iostream>
+
+1758152770 source:c:\users\tomy\documents\github\game\sources\colisionable.cpp
 

@@ -1,8 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "stdlib.h"
-#include "time.h"
-
 /// CLASE BASE NPC
 class NPC : public sf::Drawable {
     public:
@@ -15,25 +12,23 @@ class NPC : public sf::Drawable {
         std::string getNombre();
         void setDialogo(std::string);
         std::string getDialogo();
+        void recibirGolpe(float);
+        float calcularGolpe(float);
         /****/
         void setSprite(std::string);
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         void actualizar();
-
+        bool estaColisionando(sf::Vector2f areaObj);
+        sf::Sprite getSprite();
+        void posicionar(float, float);
     protected:
-        void golpear();
-        void recibirGolpe(float);
-
-    private:
         float generarFuerza(float);
         const char *_dialogo;
         const char *_nombre;
         float _vida;
         float _fuerza;
-        /****/
-        sf::Vector2f _spriteSize;
+    private:
         sf::Sprite _sprite;
         sf::Texture _textura;
         sf::Vector2f _velocidad;
 };
-

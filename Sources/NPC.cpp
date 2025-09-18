@@ -1,6 +1,5 @@
-#include <iostream>
 #include "../Includes/NPC.h"
-#include "../Includes/MAPA.h"
+#include "../Includes/PANTALLA.h"
 
 NPC::NPC() :
     _textura("IMG/link.png"),
@@ -46,6 +45,22 @@ std::string NPC::getDialogo(){
     return dialogo;
 };
 
+void NPC::recibirGolpe(float contGolpe) {
+
+}
+
+float NPC::calcularGolpe(float fuerza) {
+    return rand() / fuerza + 5;
+}
+
+sf::Sprite NPC::getSprite() {
+    return _sprite;
+}
+
+void NPC::posicionar(float x, float y) {
+    _sprite.setPosition({x,y});
+}
+
 // DATOS PARA VIDEO
 
 void NPC::setSprite(std::string txt) {
@@ -57,12 +72,19 @@ void NPC::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(_sprite, states);
 }
 
+bool NPC::estaColisionando(sf::Vector2f areaObj) {
+    if (_sprite.getGlobalBounds().contains(areaObj)) {
+        return true;
+    }
+    return false;
+}
+
 void NPC::actualizar() {
     _velocidad = {0, 0};
 
     PANTALLA* screen = new PANTALLA;
 
-    // EVITA QUE SALGA DE PANTALLA
+    /// PERMITE MOVIMIENTO
 
     // PANTALLA IZQUIERDA
     if(_sprite.getGlobalBounds().getCenter().x < _sprite.getOrigin().x) {
@@ -83,16 +105,16 @@ void NPC::actualizar() {
 
     // TECLAS DE MOVIMIENTO
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-       _velocidad.y = -5;
+       _velocidad.y = -3;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        _velocidad.x = -5;
+        _velocidad.x = -3;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-       _velocidad.y = 5;
+       _velocidad.y = 3;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        _velocidad.x = 5;
+        _velocidad.x = 3;
     }
 
     // DIRECCION DE SPRITE AL CAMINAR

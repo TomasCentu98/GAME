@@ -1,5 +1,5 @@
 #include "../Includes/MANAGER.h"
-#include "../Includes/MAPA.h"
+#include "../Includes/PANTALLA.h"
 
 void app() {
 

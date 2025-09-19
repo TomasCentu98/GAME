@@ -10,8 +10,8 @@ public:
     ~PANTALLA();
 
 private:
-    const float _ANCHO = 800;
-    const float _LARGO = 576;
+    const unsigned int _ANCHO = 800;
+    const unsigned int _LARGO = 576;
 
 
 };

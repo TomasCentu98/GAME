@@ -4,16 +4,16 @@ ENEMIGO::ENEMIGO() :
     _textura("IMG/link.png"),
     _sprite(_textura)
 {
-    _vida = 150.f;
+    _vida = 100.f;
     _fuerza = 15.f;
 }
 
-void ENEMIGO::golpear(HEROE heroe) {
-    heroe.recibirGolpe(calcularGolpe(_fuerza));
+void ENEMIGO::golpear(HEROE &enlace) {
+    enlace.recibirGolpe(calcularGolpe(_fuerza));
 }
 
 void ENEMIGO::recibirGolpe(float cantGolpe) {
-    _vida = cantGolpe;
+    _vida -= cantGolpe;
 }
 
 bool ENEMIGO::finBatalla() {

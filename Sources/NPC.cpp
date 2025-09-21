@@ -51,7 +51,7 @@ void NPC::recibirGolpe(float contGolpe) {
 }
 
 float NPC::calcularGolpe(float fuerza) {
-    return rand() / fuerza + 5;
+    return (rand() % (int)_fuerza) + 5;
 }
 
 sf::Sprite NPC::getSprite() {
@@ -138,6 +138,17 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
     }
 }
 
+int NPC::defensa(){
+    int defendido = (rand() % 8) + 1;
 
+    return defendido;
 
+}
 
+bool NPC::getDefensa(){
+    return estaDefendido;
+};
+
+void NPC::setDefensa(bool defensa){
+    estaDefendido = defensa;
+}

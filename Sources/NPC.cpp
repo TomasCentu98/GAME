@@ -1,5 +1,6 @@
 #include "../Includes/NPC.h"
 #include "../Includes/PANTALLA.h"
+#include <iostream>
 
 NPC::NPC() :
     _textura("IMG/link.png"),
@@ -79,28 +80,24 @@ bool NPC::estaColisionando(sf::Vector2f areaObj) {
     return false;
 }
 
-void NPC::actualizar() {
+void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
     _velocidad = {0, 0};
 
-    PANTALLA* screen = new PANTALLA;
-
-    /// PERMITE MOVIMIENTO
-
-    // PANTALLA IZQUIERDA
+    // BORDE PANTALLA IZQUIERDA
     if(_sprite.getGlobalBounds().getCenter().x < _sprite.getOrigin().x) {
         _sprite.setPosition({_sprite.getOrigin().x, _sprite.getPosition().y});
     }
-    // PANTALLA ARRIBA
+    // BORDE PANTALLA ARRIBA
     if(_sprite.getGlobalBounds().getCenter().y < _sprite.getOrigin().y) {
         _sprite.setPosition({_sprite.getPosition().x, _sprite.getOrigin().y});
     }
-    // PANTALLA ABAJO
-    if(_sprite.getGlobalBounds().getCenter().y > screen->getLargo() - _sprite.getOrigin().y) {
-        _sprite.setPosition({_sprite.getPosition().x , screen->getLargo() - _sprite.getOrigin().y});
+    // BORDE PANTALLA ABAJO
+    if(_sprite.getGlobalBounds().getCenter().y > heigth - _sprite.getOrigin().y) {
+        _sprite.setPosition({_sprite.getPosition().x , heigth - _sprite.getOrigin().y});
     }
-    // PANTALLA DERECHA
-    if(_sprite.getGlobalBounds().getCenter().x > screen->getAncho() - _sprite.getOrigin().x) {
-        _sprite.setPosition({screen->getAncho() - _sprite.getOrigin().x , _sprite.getPosition().y});
+    // BORDE PANTALLA DERECHA
+    if(_sprite.getGlobalBounds().getCenter().x > width - _sprite.getOrigin().x) {
+        _sprite.setPosition({width - _sprite.getOrigin().x , _sprite.getPosition().y});
     }
 
     // TECLAS DE MOVIMIENTO
@@ -124,7 +121,21 @@ void NPC::actualizar() {
         _sprite.setScale({1.f,1.f});
     }
 
-    _sprite.move(_velocidad);
+    // calcular nueva posición
+    const int azulejoSize = 32;
+    const int cantAzulejosX = width / azulejoSize;
+
+    sf::Vector2f azulejoPos = {_sprite.getPosition().x + _velocidad.x, _sprite.getPosition().y + _velocidad.y};
+
+    int azulejoX = azulejoPos.x / azulejoSize;
+    int azulejoY = azulejoPos.y  / azulejoSize;
+
+    // verificar si el azulejo destino es sólido
+    // x , y , cant -> 0 + 1 * 25 -> azulejos[25]
+    if (mapaActual.esSolido(azulejoX, azulejoY, cantAzulejosX))
+    {
+        _sprite.move(_velocidad); // mover solo si no es sólido
+    }
 }
 
 

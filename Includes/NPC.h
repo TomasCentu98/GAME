@@ -1,4 +1,5 @@
 #pragma once
+#include "MAPA.h"
 #include <SFML/Graphics.hpp>
 /// CLASE BASE NPC
 class NPC : public sf::Drawable {
@@ -17,7 +18,7 @@ class NPC : public sf::Drawable {
         /****/
         void setSprite(std::string);
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-        void actualizar();
+        void actualizar(MAPA &, int, int);
         bool estaColisionando(sf::Vector2f areaObj);
         sf::Sprite getSprite();
         void posicionar(float, float);

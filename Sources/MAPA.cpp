@@ -1,4 +1,5 @@
 #include "../Includes/MAPA.h"
+#include <iostream>
 
 bool MAPA::load(const std::filesystem::path& tileset, sf::Vector2u azulejosSize, const int* azulejos, unsigned int width, unsigned int height) {
 
@@ -32,6 +33,7 @@ bool MAPA::load(const std::filesystem::path& tileset, sf::Vector2u azulejosSize,
             triangles[4].texCoords = sf::Vector2f((tu + 1) * azulejosSize.x, tv * azulejosSize.y);
             triangles[5].texCoords = sf::Vector2f((tu + 1) * azulejosSize.x, (tv + 1) * azulejosSize.y);
         }
+
     }
 
     return true;
@@ -44,4 +46,10 @@ void MAPA::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     states.texture = &_tileset;
 
     target.draw(_vertices, states);
+}
+
+bool MAPA::esSolido(int x, int y, int width) const {
+    const int index = x + y * width;
+    if(index >= 450) return false;
+    return _colisiones[index];
 }

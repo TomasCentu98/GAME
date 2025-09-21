@@ -4,10 +4,10 @@
 class MAPA : public sf::Drawable, public sf::Transformable {
 public:
     bool load(const std::filesystem::path& tileset, sf::Vector2u tileSize, const int* tiles, unsigned int, unsigned int);
-
+    bool esSolido(int x, int y, int width) const;
+    std::vector<int> _colisiones;
 private:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
     sf::VertexArray _vertices;
     sf::Texture _tileset;
 };

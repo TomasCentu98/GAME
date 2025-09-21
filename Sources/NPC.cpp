@@ -6,7 +6,10 @@ NPC::NPC() :
     _textura("IMG/link.png"),
     _sprite(_textura)
 {
-    _sprite.setOrigin({_sprite.getTexture().getSize().x / 2.f, _sprite.getTexture().getSize().y / 2.f});
+    _sprite.setOrigin({
+        _sprite.getTexture().getSize().x / 2.f,
+        _sprite.getTexture().getSize().y / 2.f
+    });
 
     _vida = 100.f;
     _fuerza = 5.f;
@@ -62,7 +65,22 @@ void NPC::posicionar(float x, float y) {
     _sprite.setPosition({x,y});
 }
 
-// DATOS PARA VIDEO
+int NPC::defensa(){
+    int defendido = (rand() % 8) + 1;
+
+    return defendido;
+
+}
+
+bool NPC::getDefensa(){
+    return _estaDefendido;
+};
+
+void NPC::setDefensa(bool defensa){
+    _estaDefendido = defensa;
+}
+
+// DATOS PARA VIDEO Y MOVIMIENTO
 
 void NPC::setSprite(std::string txt) {
     _textura.loadFromFile(txt),
@@ -138,17 +156,6 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
     }
 }
 
-int NPC::defensa(){
-    int defendido = (rand() % 8) + 1;
 
-    return defendido;
 
-}
 
-bool NPC::getDefensa(){
-    return estaDefendido;
-};
-
-void NPC::setDefensa(bool defensa){
-    estaDefendido = defensa;
-}

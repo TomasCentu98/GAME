@@ -8,8 +8,8 @@ ENEMIGO::ENEMIGO() :
     _fuerza = 15.f;
 }
 
-void ENEMIGO::golpear(HEROE &enlace) {
-    enlace.recibirGolpe(calcularGolpe(_fuerza));
+void ENEMIGO::golpear(HEROE &heroe) {
+    heroe.recibirGolpe(calcularGolpe(_fuerza));
 }
 
 void ENEMIGO::recibirGolpe(float cantGolpe) {

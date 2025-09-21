@@ -55,4 +55,3 @@ if(_mana >= 30){
 int HEROE::getMana(){
     return _mana;
 };
-

@@ -1,7 +1,9 @@
-#include "../Includes/NPC.h"
-#include "../Includes/MAPA.h"
-#include "../Includes/PANTALLA.h"
-#include <iostream>
+#include "HEROE.h"
+#include "ENEMIGO.h"
+#include "MAPA.h"
+#include "PANTALLA.h"
+#include "MANAGER.h"
+#include <fstream>
 
 PANTALLA::PANTALLA() {};
 
@@ -12,27 +14,12 @@ void PANTALLA::gameLoop() {
     window.setFramerateLimit(60);
     const int cantAzulejosX = _ANCHO / 32;
     const int cantAzulejosY = _LARGO / 32;
+    int mapaActual = 1;
 
-    std::vector<int> level = {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0,
-        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    };
+    std::vector<int> level = copiarDeArchivo("MAPAS/levelUno.txt");
+    sf::Vector2f salidaLevelUno = {_ANCHO,192};
+    std::vector<int> levelDos = copiarDeArchivo("MAPAS/levelDos.txt");
+    std::vector<int> levelTres = copiarDeArchivo("MAPAS/levelTres.txt");
 
     // crea mapa con dos texturas
     // 0 = no caminable // 1 = caminable
@@ -41,9 +28,14 @@ void PANTALLA::gameLoop() {
     map._colisiones = level;
 
     // DEFINICION E IMAGEN DEL PERSONAJE
-    NPC entidad;
+    HEROE entidad;
     entidad.setSprite("IMG/link.png");
     entidad.posicionar(64.f, 128.f);
+    sf::FloatRect entidadEspacio = entidad.getSprite().getGlobalBounds();
+
+    ENEMIGO gil;
+    gil.setSprite("IMG/link.png");
+    gil.posicionar(200.f, 128.f);
 
     // GAME LOOP
     while (window.isOpen()) {
@@ -55,12 +47,27 @@ void PANTALLA::gameLoop() {
 
         entidad.actualizar(map, _ANCHO, _LARGO);
 
+        if (entidadEspacio.contains(gil.getSprite().getGlobalBounds().getCenter())) {
+            // EVENTO AL CHOCAR CON ENTIDAD
+        }
+
+        // HACER IF POR CADA MAPA ACTUAL
+        if (entidad.getSprite().getGlobalBounds().contains(salidaLevelUno)) {
+            if (!map.load("IMG/map.png", {32, 32}, levelDos.data(), cantAzulejosX, cantAzulejosY));
+            map._colisiones = levelDos;
+            entidad.posicionar(0, 288);
+        }
+
+
         window.clear(sf::Color::Black);
 
         window.draw(map);
         window.draw(entidad);
+        window.draw(gil);
 
         window.display();
+
+        // audio
     }
 };
 

@@ -1,7 +1,6 @@
 #include "../Includes/MANAGER.h"
 #include "../Includes/PANTALLA.h"
 #include <iostream>
-#include "rlutil.h"
 using namespace std;
 
 void app() {
@@ -48,7 +47,6 @@ void turnoEnemigo(ENEMIGO &rival, HEROE &enlace){
     cout << "Tu salud: " <<enlace.getVida() << endl << endl;
 
     cout << "El rival esta decidiendo su accion" << endl;
-    rlutil::msleep(3000);
     decisionRival = (rand() % 2) + 1;
 
     if(decisionRival==1){
@@ -60,3 +58,24 @@ void turnoEnemigo(ENEMIGO &rival, HEROE &enlace){
     rival.setDefensa(true);
     }
 }
+
+// lee un .txt y copia la lista de numeros que tenga dentro
+std::vector<int> copiarDeArchivo(const std::string& nombreArchivo) {
+    std::ifstream archivo(nombreArchivo);
+    std::vector<int> listaCopiada;
+    int numero;
+
+    if (!archivo.is_open()) {
+        return listaCopiada;
+    }
+
+    while (archivo >> numero) {
+        listaCopiada.push_back(numero);
+    }
+
+    archivo.close();
+    return listaCopiada;
+
+}
+
+

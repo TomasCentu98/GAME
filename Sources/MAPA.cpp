@@ -1,9 +1,8 @@
 #include "../Includes/MAPA.h"
-#include <iostream>
 
-bool MAPA::load(const std::filesystem::path& tileset, sf::Vector2u azulejosSize, const int* azulejos, unsigned int width, unsigned int height) {
+bool MAPA::load(const std::filesystem::path& path, sf::Vector2u azulejosSize, const int* azulejos, unsigned int width, unsigned int height) {
 
-    if (!_tileset.loadFromFile(tileset)) return false;
+    if (!_tileset.loadFromFile(path)) return false;
 
     _vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
     _vertices.resize(width * height * 6);

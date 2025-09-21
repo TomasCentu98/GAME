@@ -11,7 +11,5 @@ public:
 
 private:
     const unsigned int _ANCHO = 800;
-    const unsigned int _LARGO = 576;
-
-
+    const unsigned int _LARGO = 544;
 };

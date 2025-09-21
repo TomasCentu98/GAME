@@ -26,7 +26,7 @@ class NPC : public sf::Drawable {
         sf::Sprite getSprite();
         void posicionar(float, float);
     protected:
-        bool estaDefendido;
+        bool _estaDefendido;
         float generarFuerza(float);
         const char *_dialogo;
         const char *_nombre;

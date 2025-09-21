@@ -5,6 +5,9 @@
 class NPC : public sf::Drawable {
     public:
         NPC();
+        bool getDefensa();
+        void setDefensa(bool);
+        int defensa();
         void setVida (float);
         void setFuerza (float);
         float getVida();
@@ -23,6 +26,7 @@ class NPC : public sf::Drawable {
         sf::Sprite getSprite();
         void posicionar(float, float);
     protected:
+        bool estaDefendido;
         float generarFuerza(float);
         const char *_dialogo;
         const char *_nombre;

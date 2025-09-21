@@ -7,7 +7,7 @@ class ENEMIGO : public NPC {
 
     public:
         ENEMIGO();
-        void golpear(HEROE);
+        void golpear(HEROE &);
         void recibirGolpe(float);
         bool finBatalla();
     private:

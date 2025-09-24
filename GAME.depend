@@ -545,32 +545,37 @@
 	"../Includes/MANAGER.h"
 	"../Includes/MAPA.h"
 
-1758244657 source:c:\users\tomy\documents\github\game\sources\enemigo.cpp
+1758494335 source:c:\users\tomy\documents\github\game\sources\enemigo.cpp
 	"../Includes/ENEMIGO.h"
 
-1758244657 c:\users\tomy\documents\github\game\includes\enemigo.h
+1758667533 c:\users\tomy\documents\github\game\includes\enemigo.h
 	"NPC.h"
 	"HEROE.h"
 
-1758244657 source:c:\users\tomy\documents\github\game\sources\heroe.cpp
+1758675266 source:c:\users\tomy\documents\github\game\sources\heroe.cpp
 	"../Includes/HEROE.h"
 
-1758244657 c:\users\tomy\documents\github\game\includes\heroe.h
+1758675231 c:\users\tomy\documents\github\game\includes\heroe.h
 	"NPC.h"
 	"ENEMIGO.h"
 
-1758244657 source:c:\users\tomy\documents\github\game\sources\manager.cpp
+1758669636 source:c:\users\tomy\documents\github\game\sources\manager.cpp
 	"../Includes/MANAGER.h"
 	"../Includes/PANTALLA.h"
+	<iostream>
 
-1758244657 c:\users\tomy\documents\github\game\includes\manager.h
+1758494335 c:\users\tomy\documents\github\game\includes\manager.h
+	<fstream>
+	<vector>
+	<HEROE.h>
+	<ENEMIGO.h>
 
-1758473835 c:\users\tomy\documents\github\game\includes\mapa.h
+1758678507 c:\users\tomy\documents\github\game\includes\mapa.h
 	<SFML/Graphics.hpp>
 
-1758474055 source:c:\users\tomy\documents\github\game\sources\mapa.cpp
+1758678538 source:c:\users\tomy\documents\github\game\sources\mapa.cpp
 	"../Includes/MAPA.h"
-	<iostream>
+	"MANAGER.h"
 
 1758244657 c:\users\tomy\documents\github\game\sfml\include\sfml\graphics.hpp
 	<SFML/Graphics/BlendMode.hpp>
@@ -1084,20 +1089,21 @@
 1758244657 c:\users\tomy\documents\github\game\sfml\include\sfml\system\sleep.hpp
 	<SFML/System/Export.hpp>
 
-1758474010 source:c:\users\tomy\documents\github\game\sources\npc.cpp
+1758678293 source:c:\users\tomy\documents\github\game\sources\npc.cpp
 	"../Includes/NPC.h"
 	"../Includes/PANTALLA.h"
 	<iostream>
 
-1758468143 c:\users\tomy\documents\github\game\includes\npc.h
+1758675220 c:\users\tomy\documents\github\game\includes\npc.h
 	"MAPA.h"
-	<SFML/Graphics.hpp>
 
-1758148452 source:c:\users\tomy\documents\github\game\main.cpp
+1758494335 source:c:\users\tomy\documents\github\game\main.cpp
 	<iostream>
-	<stdlib.h>
+	"MANAGER.h"
 	<ctime>
-	"Includes/MANAGER.h"
+	"HEROE.h"
+	"ENEMIGO.h"
+	"MANAGER.h"
 
 1758148212 source:c:\users\tomy\documents\github\game\includes\pantalla.cpp
 	"../Includes/NPC.h"
@@ -1105,13 +1111,13 @@
 
 1758148061 c:\users\tomy\documents\github\game\sources\pantalla.h
 
-1758244657 c:\users\tomy\documents\github\game\includes\pantalla.h
+1758581459 c:\users\tomy\documents\github\game\includes\pantalla.h
 
-1758157366 source:c:\users\tomy\documents\github\game\sources\pantalla.cpp
-	"../Includes/NPC.h"
-	"../Includes/MAPA.h"
-	"../Includes/PANTALLA.h"
+1758676711 source:c:\users\tomy\documents\github\game\sources\pantalla.cpp
 	"HEROE.h"
+	"ENEMIGO.h"
+	"MAPA.h"
+	"PANTALLA.h"
 	<iostream>
 
 1758152770 source:c:\users\tomy\documents\github\game\sources\colisionable.cpp

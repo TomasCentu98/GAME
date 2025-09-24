@@ -1,5 +1,4 @@
 #pragma once
-class HEROE;
 #include "NPC.h"
 #include "HEROE.h"
 

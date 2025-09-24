@@ -9,6 +9,7 @@ HEROE::HEROE() :
     _exp = 0;
     _lvl = 1;
     _mana = 70;
+
 }
 
 void HEROE::golpear(ENEMIGO &obj) {
@@ -43,15 +44,18 @@ void HEROE::curar(){
 }
 
 void HEROE::hechizo(ENEMIGO &rival){
-if(_mana >= 30){
-    if(!rival.getDefensa()){
-        rival.recibirGolpe(_fuerza*1.3);
+    if(_mana >= 30){
+        if(!rival.getDefensa()){
+            rival.recibirGolpe(_fuerza*1.3);
+        }
+       else{rival.recibirGolpe((_fuerza*1.3)-rival.defensa());
+       }
+       _mana -=30;
     }
-   else{rival.recibirGolpe((_fuerza*1.3)-rival.defensa());
-   }
-   _mana -=30;
 }
-}
+
 int HEROE::getMana(){
     return _mana;
-};
+}
+
+

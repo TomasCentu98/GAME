@@ -2,8 +2,7 @@
 #include "ENEMIGO.h"
 #include "MAPA.h"
 #include "PANTALLA.h"
-#include "MANAGER.h"
-#include <fstream>
+#include <iostream>
 
 PANTALLA::PANTALLA() {};
 
@@ -12,30 +11,24 @@ void PANTALLA::gameLoop() {
 
     sf::RenderWindow window(sf::VideoMode({_ANCHO, _LARGO}), "My GAME");
     window.setFramerateLimit(60);
-    const int cantAzulejosX = _ANCHO / 32;
-    const int cantAzulejosY = _LARGO / 32;
-    int mapaActual = 1;
 
-    std::vector<int> level = copiarDeArchivo("MAPAS/levelUno.txt");
-    sf::Vector2f salidaLevelUno = {_ANCHO,192};
-    std::vector<int> levelDos = copiarDeArchivo("MAPAS/levelDos.txt");
-    std::vector<int> levelTres = copiarDeArchivo("MAPAS/levelTres.txt");
+    // MAPA
+    MAPA mapa(_ANCHO, _LARGO);
 
-    // crea mapa con dos texturas
-    // 0 = no caminable // 1 = caminable
-    MAPA map;
-    if (!map.load("IMG/map.png", {32, 32}, level.data(), cantAzulejosX, cantAzulejosY));
-    map._colisiones = level;
-
-    // DEFINICION E IMAGEN DEL PERSONAJE
+    // DEFINICION E IMAGEN DE OBJETOS
     HEROE entidad;
     entidad.setSprite("IMG/link.png");
-    entidad.posicionar(64.f, 128.f);
-    sf::FloatRect entidadEspacio = entidad.getSprite().getGlobalBounds();
+    entidad.posicionar(150 , 200);
 
-    ENEMIGO gil;
-    gil.setSprite("IMG/link.png");
-    gil.posicionar(200.f, 128.f);
+    ENEMIGO eneg1;
+    eneg1.setSprite("IMG/link.png");
+    eneg1.posicionar(255.f, 432.f);// hasta {561 , ,432}
+
+    ENEMIGO eneg2;
+    eneg2.setSprite("IMG/link.png");
+    eneg2.posicionar(465 , 114);
+    // {465 , 114}   //hasta   {645 , 114}
+    // {465 , 210    //hasta  {645 , 210}
 
     // GAME LOOP
     while (window.isOpen()) {
@@ -45,29 +38,39 @@ void PANTALLA::gameLoop() {
             if (event->is<sf::Event::Closed>()) window.close();
         }
 
-        entidad.actualizar(map, _ANCHO, _LARGO);
+        /*
+        // PARA SACAR POSICIONES DURANTE EL JUEGO PARA CONFIGURAR
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+            std::cout << " X: " << entidad.getSprite().getPosition().x
+                        << " Y: " << entidad.getSprite().getPosition().y;
+        }
+        */
 
-        if (entidadEspacio.contains(gil.getSprite().getGlobalBounds().getCenter())) {
-            // EVENTO AL CHOCAR CON ENTIDAD
+        // MUEVE Y CHEQUEA COLISIONES DEL MAPA
+        entidad.actualizar(mapa, _ANCHO, _LARGO);
+
+        if (entidad.estaColisionando(eneg1.getSprite().getPosition())) {
+            std::cout << " || Colisionando con ENEG1 || "; // PONER EVENTO DE PELEA
         }
 
-        // HACER IF POR CADA MAPA ACTUAL
-        if (entidad.getSprite().getGlobalBounds().contains(salidaLevelUno)) {
-            if (!map.load("IMG/map.png", {32, 32}, levelDos.data(), cantAzulejosX, cantAzulejosY));
-            map._colisiones = levelDos;
-            entidad.posicionar(0, 288);
+        if (entidad.estaColisionando(eneg2.getSprite().getPosition())) {
+            std::cout << " || Colisionando con ENEG2 || "; // PONER EVENTO DE PELEA
         }
 
+        // CONTROLA EL PASO DE MAPAS
+        mapa.chequeoPasoDeMapa(entidad);
 
+        // DIBUJO DE ENTIDADES
         window.clear(sf::Color::Black);
-
-        window.draw(map);
+        window.draw(mapa);
         window.draw(entidad);
-        window.draw(gil);
+
+        //if(mapa.getMapaActual() == 1) {
+            window.draw(eneg1);
+            window.draw(eneg2);
+        //}
 
         window.display();
-
-        // audio
     }
 };
 

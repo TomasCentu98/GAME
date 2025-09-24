@@ -78,4 +78,3 @@ std::vector<int> copiarDeArchivo(const std::string& nombreArchivo) {
 
 }
 
-

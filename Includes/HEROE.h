@@ -1,5 +1,4 @@
 #pragma once
-class ENEMIGO;
 #include "NPC.h"
 #include "ENEMIGO.h"
 

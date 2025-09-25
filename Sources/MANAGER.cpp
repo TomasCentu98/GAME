@@ -78,3 +78,23 @@ std::vector<int> copiarDeArchivo(const std::string& nombreArchivo) {
 
 }
 
+void patrullar(ENEMIGO &obj, sf::Vector2f posIzq, sf::Vector2f posDer) {
+    int nuevaPosX;
+    int posY = obj.getSprite().getPosition().y;
+
+    if (obj.getDireccionMov()) {
+        obj.setVelocidad(2,0);
+        nuevaPosX = obj.getSprite().getPosition().x + obj.getVelocidad().x;
+        if (obj.getSprite().getPosition().x >= posDer.x) {
+            obj.setDirrecionMov(false);
+        }
+    } else {
+        obj.setVelocidad(-2,0);
+        nuevaPosX = obj.getSprite().getPosition().x + obj.getVelocidad().x;
+        if (obj.getSprite().getPosition().x <= posIzq.x) {
+            obj.setDirrecionMov(true);
+        }
+    }
+
+    obj.posicionar(nuevaPosX, posY);
+}

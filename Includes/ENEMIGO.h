@@ -9,7 +9,12 @@ class ENEMIGO : public NPC {
         void golpear(HEROE &);
         void recibirGolpe(float);
         bool finBatalla();
+        sf::Vector2f getVelocidad();
+        void setVelocidad(float, float);
+        bool getDireccionMov();
+        void setDirrecionMov(bool);
     private:
+        bool _moviendoDerecha = true;
         sf::Vector2f _spriteSize;
         sf::Sprite _sprite;
         sf::Texture _textura;

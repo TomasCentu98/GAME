@@ -1,6 +1,5 @@
 #include "../Includes/NPC.h"
 #include "../Includes/PANTALLA.h"
-#include <iostream>
 
 NPC::NPC() :
     _textura("IMG/link.png"),
@@ -97,6 +96,7 @@ bool NPC::estaColisionando(sf::Vector2f areaObj) {
 
 void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
     _velocidad = {0, 0};
+
     sf::Vector2 personajePos = {
         _sprite.getGlobalBounds().getCenter().x,
         _sprite.getGlobalBounds().getCenter().y

@@ -1,6 +1,7 @@
 #include "../Includes/MANAGER.h"
 #include "../Includes/PANTALLA.h"
 #include <iostream>
+
 using namespace std;
 
 void app() {
@@ -97,4 +98,9 @@ void patrullar(ENEMIGO &obj, sf::Vector2f posIzq, sf::Vector2f posDer) {
     }
 
     obj.posicionar(nuevaPosX, posY);
+}
+
+void eventoBatalla(ENEMIGO &rival,HEROE &enlace){
+turnoHeroe(enlace, rival);
+turnoEnemigo(rival, enlace);
 }

@@ -8,9 +8,9 @@ MAPA::MAPA(int anchoP, int largoP) {
     level = copiarDeArchivo("MAPAS/levelUno.txt");
     levelDos = copiarDeArchivo("MAPAS/levelDos.txt");
     levelTres = copiarDeArchivo("MAPAS/levelTres.txt");
-    _puertaHaciaLvlDos = {anchoP , 192};
+    _puertaHaciaLvlDos = {(float)anchoP , 192};
     _puertaVueltaLvlUno = {0 , 224};
-    _puertaHaciaLvlTres = {anchoP , 256};
+    _puertaHaciaLvlTres = {(float)anchoP , 256};
     _puertaVueltaLvlDos = {0 , 224};
     _cantAzulejosX = anchoP / 32;
     _cantAzulejosY = largoP / 32;

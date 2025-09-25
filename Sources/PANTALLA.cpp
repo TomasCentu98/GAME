@@ -57,22 +57,32 @@ void PANTALLA::gameLoop() {
 
         if (!entidad.estaColisionando(eneg1pan1.getSprite().getPosition())) {
             patrullar(eneg1pan1, {250,432}, {562,432});
-            // PONER EVENTO DE PELEA
+            if (entidad.estaColisionando(eneg1pan1.getSprite().getPosition()))
+            {
+                eventoBatalla(eneg1pan1, entidad);
+            }
         }
         if (!entidad.estaColisionando(eneg2pan1.getSprite().getPosition())) {
             patrullar(eneg2pan1, {250,114}, {465,114});
-            // PONER EVENTO DE PELEA
+            if (entidad.estaColisionando(eneg2pan1.getSprite().getPosition())){
+                eventoBatalla(eneg2pan1, entidad);
+            }
         }
         if (!entidad.estaColisionando(eneg1pan2.getSprite().getPosition())) {
             patrullar(eneg1pan2, {200,432}, {550,432});
-            // PONER EVENTO DE PELEA
+            if (entidad.estaColisionando(eneg1pan2.getSprite().getPosition())){
+                eventoBatalla(eneg1pan2, entidad);
+            }
         }
         if (!entidad.estaColisionando(eneg2pan2.getSprite().getPosition())) {
             patrullar(eneg2pan2, {300,114}, {600,114});
-            // PONER EVENTO DE PELEA
+            if (entidad.estaColisionando(eneg2pan2.getSprite().getPosition())){
+                eventoBatalla(eneg2pan2, entidad);
+            }
         }
         if (!entidad.estaColisionando(gefe.getSprite().getPosition())) {
             // PONER EVENTO DE PELEA GEFE
+           //if(entidad.estaColisionando(gefe.getSprite().getPosition()))
         }
 
         // CONTROLA EL PASO DE MAPAS

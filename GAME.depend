@@ -559,12 +559,12 @@
 	"NPC.h"
 	"ENEMIGO.h"
 
-1758758996 source:c:\users\tomy\documents\github\game\sources\manager.cpp
+1758926753 source:c:\users\tomy\documents\github\game\sources\manager.cpp
 	"../Includes/MANAGER.h"
 	"../Includes/PANTALLA.h"
 	<iostream>
 
-1758754589 c:\users\tomy\documents\github\game\includes\manager.h
+1758926753 c:\users\tomy\documents\github\game\includes\manager.h
 	<fstream>
 	<vector>
 	<HEROE.h>
@@ -573,7 +573,7 @@
 1758678507 c:\users\tomy\documents\github\game\includes\mapa.h
 	<SFML/Graphics.hpp>
 
-1758678538 source:c:\users\tomy\documents\github\game\sources\mapa.cpp
+1758926753 source:c:\users\tomy\documents\github\game\sources\mapa.cpp
 	"../Includes/MAPA.h"
 	"MANAGER.h"
 
@@ -1096,10 +1096,11 @@
 1758675220 c:\users\tomy\documents\github\game\includes\npc.h
 	"MAPA.h"
 
-1758494335 source:c:\users\tomy\documents\github\game\main.cpp
+1759013446 source:c:\users\tomy\documents\github\game\main.cpp
 	<iostream>
 	"MANAGER.h"
 	<ctime>
+	<iostream>
 	"HEROE.h"
 	"ENEMIGO.h"
 	"MANAGER.h"
@@ -1112,7 +1113,7 @@
 
 1758581459 c:\users\tomy\documents\github\game\includes\pantalla.h
 
-1758759214 source:c:\users\tomy\documents\github\game\sources\pantalla.cpp
+1759002390 source:c:\users\tomy\documents\github\game\sources\pantalla.cpp
 	"HEROE.h"
 	"ENEMIGO.h"
 	"MAPA.h"

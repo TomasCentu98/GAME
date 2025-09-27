@@ -16,19 +16,17 @@ void PANTALLA::gameLoop() {
     MAPA mapa(_ANCHO, _LARGO);
 
     // DEFINICION E IMAGEN DE OBJETOS
+
+    // CAMBIAR POR RECTANGLE SHAPE Y CREAR DENTRO DE EVENTO
     HEROE entidad;
     entidad.setSprite("IMG/link.png");
     entidad.posicionar(561 , 432);
 
     ENEMIGO eneg1pan1;
     eneg1pan1.setSprite("IMG/link.png");
-    //eneg1pan1.posicionar(255.f, 432.f);// hasta {561 ,432}
 
     ENEMIGO eneg2pan1;
     eneg2pan1.setSprite("IMG/link.png");
-    //eneg2pan1.posicionar(465 , 114);
-    // {465 , 114}   //hasta   {645 , 114}
-    // {465 , 210    //hasta  {645 , 210}
 
     ENEMIGO eneg1pan2;
     eneg1pan2.setSprite("IMG/link.png");

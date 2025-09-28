@@ -42,5 +42,5 @@
 
 # 
 SFML/
-GAME.depend
-GAME.layout
+*.layout
+*.depend

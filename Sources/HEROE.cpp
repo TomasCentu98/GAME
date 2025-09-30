@@ -4,16 +4,12 @@ HEROE::HEROE() :
     _textura("IMG/link.png"),
     _sprite(_textura)
 {
-    _vida = 150;
-    _fuerza = 12;
+    _vida = 100;
+    _fuerza = 10;
     _exp = 0;
     _lvl = 1;
     _mana = 70;
-    _enBatalla = false;
-}
 
-void HEROE::setMana(int mana) {
-    _mana = mana;
 }
 
 void HEROE::golpear(ENEMIGO &obj) {
@@ -62,10 +58,4 @@ int HEROE::getMana(){
     return _mana;
 }
 
-bool HEROE::getBatallando() {
-    return _enBatalla;
-}
 
-void HEROE::setBatallando(bool estaPeleando) {
-    _enBatalla = estaPeleando;
-}

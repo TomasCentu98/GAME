@@ -10,12 +10,8 @@ class HEROE : public NPC {
         void golpear(ENEMIGO &);
         void recibirGolpe(float);
         void victoria();
-        int getMana();
-        void setMana(int);
-        void setBatallando(bool);
-        bool getBatallando();
+        int getMana();;
     private:
-        bool _enBatalla;
         int _mana;
         int _exp;
         int _lvl;

@@ -5,7 +5,7 @@ ENEMIGO::ENEMIGO() :
     _sprite(_textura)
 {
     _vida = 100.f;
-    _fuerza = 15.f;
+    _fuerza = 7.f;
 
     _sprite.setOrigin({
         _sprite.getTexture().getSize().x / 2.f,

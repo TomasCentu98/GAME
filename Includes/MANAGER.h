@@ -9,3 +9,5 @@ void turnoEnemigo(ENEMIGO &rival, HEROE &enlace);
 std::vector<int> copiarDeArchivo(const std::string&);
 void patrullar(ENEMIGO &obj, sf::Vector2f posIzq, sf::Vector2f posDer);
 void eventoBatalla(ENEMIGO&, HEROE&, sf::RenderWindow&);
+std::string generarDialogo(int numero);
+//std::string generarDialogoHeroe();

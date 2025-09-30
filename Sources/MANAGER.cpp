@@ -1,7 +1,10 @@
 #include "../Includes/MANAGER.h"
 #include "../Includes/PANTALLA.h"
 #include "MAPA_PELEA.h"
-
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
+#include <cstring>
 using namespace std;
 
 void app() {
@@ -174,3 +177,36 @@ void eventoBatalla(ENEMIGO &rival, HEROE &enlace, sf::RenderWindow& window){
     enlace.posicionar(posEnlace.x, posEnlace.y);
     rival.posicionar(posR.x, posR.y);
 }
+
+
+std::string generarDialogo(int numero){
+    FILE *dialogo;
+
+
+    int dialogoRandom = (rand()%3)+1;
+
+    if(numero==0)dialogo = fopen("DialogosEnemigo.txt","rb");
+    if(numero==1)dialogo = fopen("DialogosHeroe.txt","rb");
+    if(dialogo==nullptr){
+        exit(1);
+    }
+    char prueba[200]={};
+    int contador=1;
+
+    while(fgets(prueba,sizeof(prueba),dialogo)){
+        if(contador==dialogoRandom){
+            break;
+        }
+        contador++;
+        memset(prueba, '\0', sizeof (prueba));
+    };
+
+    fclose(dialogo);
+    std::string texto(prueba);
+    return texto;
+};
+
+/*std::string generarDialogoHeroe(){
+
+};
+*/

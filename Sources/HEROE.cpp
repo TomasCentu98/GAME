@@ -4,8 +4,8 @@ HEROE::HEROE() :
     _textura("IMG/link.png"),
     _sprite(_textura)
 {
-    _vida = 100;
-    _fuerza = 10;
+    _vida = 150;
+    _fuerza = 12;
     _exp = 0;
     _lvl = 1;
     _mana = 70;

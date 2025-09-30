@@ -1,7 +1,3 @@
-Relator:
-"Nuestro "Heroe" yace placido descansando sin notar que sus pertenencias les fueron arrebatadas."
-
-Enlace:
 "Uh loco me re dormi..."
 "Tengo una re lija"
 "Me faltan mi' cosa'"
@@ -10,11 +6,3 @@ Enlace:
 "Quien fue?... A esto' lo' arruino"
 "La milanesa de pollo e' mejor, aparte la de carne ta re caraaaaaa"
 
-Duende:
-"Yo no se nada de tus cosas amigo, no flashees"
-"Yo no fui, arregla con el jefe"
-"No te zarpes que te arruino"
-
-
-Orco Jefe:
-"Todo esto por una milanesa? Ni siquiera que fuera de carne."

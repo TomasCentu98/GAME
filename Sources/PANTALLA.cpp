@@ -53,35 +53,15 @@ void PANTALLA::gameLoop() {
         entidad.actualizar(mapa, _ANCHO, _LARGO);
 
 
-        if (!entidad.estaColisionando(eneg1pan1.getSprite().getPosition())) {
-            patrullar(eneg1pan1, {250,432}, {562,432});
-            if (entidad.estaColisionando(eneg1pan1.getSprite().getPosition()))
-            {
-                eventoBatalla(eneg1pan1, entidad);
+         if (!entidad.getBatallando()) {
+            if (!entidad.estaColisionando(eneg1pan1.getSprite().getPosition())) {
+                patrullar(eneg1pan1, {250,432}, {562,432});
+                if (entidad.estaColisionando(eneg1pan1.getSprite().getPosition())){
+                    eventoBatalla(eneg1pan1, entidad, window);
+                }
             }
-        }
-        if (!entidad.estaColisionando(eneg2pan1.getSprite().getPosition())) {
-            patrullar(eneg2pan1, {250,114}, {465,114});
-            if (entidad.estaColisionando(eneg2pan1.getSprite().getPosition())){
-                eventoBatalla(eneg2pan1, entidad);
-            }
-        }
-        if (!entidad.estaColisionando(eneg1pan2.getSprite().getPosition())) {
-            patrullar(eneg1pan2, {200,432}, {550,432});
-            if (entidad.estaColisionando(eneg1pan2.getSprite().getPosition())){
-                eventoBatalla(eneg1pan2, entidad);
-            }
-        }
-        if (!entidad.estaColisionando(eneg2pan2.getSprite().getPosition())) {
-            patrullar(eneg2pan2, {300,114}, {600,114});
-            if (entidad.estaColisionando(eneg2pan2.getSprite().getPosition())){
-                eventoBatalla(eneg2pan2, entidad);
-            }
-        }
-        if (!entidad.estaColisionando(gefe.getSprite().getPosition())) {
-            // PONER EVENTO DE PELEA GEFE
-           //if(entidad.estaColisionando(gefe.getSprite().getPosition()))
-        }
+         }
+
 
         // CONTROLA EL PASO DE MAPAS
         mapa.chequeoPasoDeMapa(entidad);
@@ -126,11 +106,11 @@ void PANTALLA::gameLoop() {
             enemigosCreadosPan3 = true;
         }
 
-        window.draw(eneg1pan1);
-        window.draw(eneg2pan1);
-        window.draw(eneg1pan2);
-        window.draw(eneg2pan2);
-        window.draw(gefe);
+        if (eneg1pan1.getVida() > 0) window.draw(eneg1pan1);
+        if (eneg2pan1.getVida() > 0) window.draw(eneg2pan1);
+        if (eneg1pan2.getVida() > 0) window.draw(eneg1pan2);
+        if (eneg2pan2.getVida() > 0) window.draw(eneg2pan2);
+        if (gefe.getVida() > 0) window.draw(gefe);
 
         window.display();
     }

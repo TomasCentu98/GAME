@@ -9,7 +9,20 @@ HEROE::HEROE() :
     _exp = 0;
     _lvl = 1;
     _mana = 70;
+    _enBatalla = false;
 
+}
+
+void HEROE::setMana(int mana) {
+    _mana = mana;
+}
+
+bool HEROE::getBatallando() {
+    return _enBatalla;
+}
+
+void HEROE::setBatallando(bool estaPeleando) {
+    _enBatalla = estaPeleando;
 }
 
 void HEROE::golpear(ENEMIGO &obj) {

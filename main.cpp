@@ -10,6 +10,8 @@
 
 int main () {
 
+    app();
+/*
     sf::RenderWindow window(sf::VideoMode({800,576}), "SFML works!");
 
     sf::Texture tex("IMG/menu.png");
@@ -59,7 +61,7 @@ sf::RectangleShape salir( {160.f , 40.f} );
 
 
 
-
+*/
     return 0;
 
 

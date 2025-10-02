@@ -25,7 +25,7 @@ void HEROE::setBatallando(bool estaPeleando) {
     _enBatalla = estaPeleando;
 }
 
-void HEROE::golpear(ENEMIGO &obj) {
+void HEROE::golpear(NPC &obj) {
     obj.recibirGolpe(calcularGolpe(_fuerza));
 }
 
@@ -56,7 +56,7 @@ void HEROE::curar(){
     }
 }
 
-void HEROE::hechizo(ENEMIGO &rival){
+void HEROE::hechizo(NPC &rival){
     if(_mana >= 30){
         if(!rival.getDefensa()){
             rival.recibirGolpe(_fuerza*1.3);

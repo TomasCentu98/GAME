@@ -1,13 +1,12 @@
 #pragma once
 #include "NPC.h"
-#include "ENEMIGO.h"
 
 class HEROE : public NPC {
     public:
         HEROE();
         void curar();
-        void hechizo(ENEMIGO &);
-        void golpear(ENEMIGO &);
+        void hechizo(NPC &);
+        void golpear(NPC &);
         void recibirGolpe(float);
         void victoria();
         int getMana();

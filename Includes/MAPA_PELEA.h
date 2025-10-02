@@ -1,5 +1,5 @@
 #pragma once
-#include "MAPA.h"
+#include <SFML/Graphics.hpp>
 
 class MAPA_PELEA {
 public:

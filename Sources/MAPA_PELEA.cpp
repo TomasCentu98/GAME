@@ -1,5 +1,5 @@
 #include "MAPA_PELEA.h"
-#include <iostream>
+#include "vector"
 
 MAPA_PELEA::MAPA_PELEA() :
     _hudTexture(),
@@ -65,27 +65,11 @@ void MAPA_PELEA::iniciar() {
     _textoExplicativo.setPosition({320.f , 370.f});
     _textoExplicativo.setCharacterSize(12);
 
-    _vidaHeroe.setString("HEROE\n 100  / 100");
+    _vidaHeroe.setString("asd");
     _vidaHeroe.setCharacterSize(12);
     _vidaHeroe.setPosition({350.f , 470.f});
 
-    _vidaEnemigo.setString("ENEMIGO\n 100  / 100");
+    _vidaEnemigo.setString("asd");
     _vidaEnemigo.setCharacterSize(12);
     _vidaEnemigo.setPosition({500.f , 470.f});
 }
-
-/*
-    std::string textoEntrada = " golpeando golpeando golpeando golpeando golpeando golpeando golpeando golpeando golpeando golpeando";
-    std::string textoSalida;
-
-    int contadorChar = 0;
-    for (size_t x = 0; x < textoEntrada.size(); x++) {
-        textoSalida += textoEntrada[x];
-        contadorChar++;
-
-        if (contadorChar > 30 && textoEntrada[x] == ' ') {
-            textoSalida += '\n';
-            contadorChar = 0;
-        }
-    }
-*/

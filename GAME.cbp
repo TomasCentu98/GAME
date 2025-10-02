@@ -46,14 +46,12 @@
 			<Add library="sfml-system" />
 			<Add directory="SFML/lib" />
 		</Linker>
-		<Unit filename="Includes/ENEMIGO.h" />
 		<Unit filename="Includes/HEROE.h" />
 		<Unit filename="Includes/MANAGER.h" />
 		<Unit filename="Includes/MAPA.h" />
 		<Unit filename="Includes/MAPA_PELEA.h" />
 		<Unit filename="Includes/NPC.h" />
 		<Unit filename="Includes/PANTALLA.h" />
-		<Unit filename="Sources/ENEMIGO.cpp" />
 		<Unit filename="Sources/HEROE.cpp" />
 		<Unit filename="Sources/MANAGER.cpp" />
 		<Unit filename="Sources/MAPA.cpp" />

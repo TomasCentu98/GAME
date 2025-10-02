@@ -1,10 +1,16 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 
 class PANTALLA
 {
 public:
     PANTALLA();
-    void gameLoop();
+    // pantallas
+    void gameLoop(HEROE &enlace, sf::RenderWindow &window);
+    void creditos(sf::RenderWindow &window);
+    void menu(sf::RenderWindow &window);
+    void pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window);
+
     float getAncho();
     float getLargo();
     ~PANTALLA();

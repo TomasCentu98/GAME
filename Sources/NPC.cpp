@@ -1,12 +1,12 @@
 #include "../Includes/NPC.h"
-#include "../Includes/PANTALLA.h"
+#include "HEROE.h"
 
 NPC::NPC() :
     _textura("IMG/link.png"),
     _sprite(_textura)
 {
-    _vida = 100.f;
-    _fuerza = 5.f;
+    _vida = 100;
+    _fuerza = 15;
 
     _sprite.setOrigin({
         _sprite.getTexture().getSize().x / 2.f,
@@ -14,19 +14,19 @@ NPC::NPC() :
     });
 }
 
-void NPC::setVida (float vida){
+void NPC::setVida (int vida){
     _vida = vida;
 };
 
-void NPC::setFuerza (float fuerza){
+void NPC::setFuerza (int fuerza){
     _fuerza = fuerza;
 };
 
-float NPC::getVida(){
+int NPC::getVida(){
     return _vida;
 };
 
-float NPC::getFuerza(){
+int NPC::getFuerza(){
     return _fuerza;
 };
 
@@ -48,18 +48,38 @@ std::string NPC::getDialogo(){
     return dialogo;
 };
 
-void NPC::recibirGolpe(float contGolpe) {
-    // CAMBIAR EN ENEMIGOS Y HEROE
+void NPC::recibirGolpe(int cantGolpe) {
+    _vida -= cantGolpe;
 }
 
-float NPC::calcularGolpe(float fuerza) {
-    return (rand() % (int)_fuerza) + 5;
+int NPC::calcularGolpe(int fuerza) {
+    return (rand() % _fuerza) + 5;
 }
 
+void NPC::golpear(HEROE &heroe) {
+    heroe.recibirGolpe(calcularGolpe(_fuerza));
+}
 
 int NPC::defensa() {
     int defendido = (rand() % 8) + 1;
     return defendido;
+}
+
+sf::Vector2f NPC::getVelocidad() {
+    return _velocidad;
+}
+
+void NPC::setVelocidad(float x, float y) {
+    _velocidad.x = x;
+    _velocidad.y = y;
+}
+
+void NPC::setDirrecionMov(bool derecha) {
+    _moviendoDerecha = derecha;
+}
+
+bool NPC::getDireccionMov() {
+    return _moviendoDerecha;
 }
 
 bool NPC::getDefensa() {
@@ -153,4 +173,25 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
     {
         _sprite.move(_velocidad); // mover solo si no es sólido
     }
+}
+
+void NPC::patrullar(int posIzq, int posDer) {
+    int nuevaPosX;
+    int posY = _sprite.getPosition().y;
+
+    if (getDireccionMov()) {
+        setVelocidad(2,0);
+        nuevaPosX = _sprite.getPosition().x + getVelocidad().x;
+        if (_sprite.getPosition().x >= posDer) {
+            setDirrecionMov(false);
+        }
+    } else {
+        setVelocidad(-2,0);
+        nuevaPosX = _sprite.getPosition().x + getVelocidad().x;
+        if (_sprite.getPosition().x <= posIzq) {
+            setDirrecionMov(true);
+        }
+    }
+
+    posicionar((float)nuevaPosX, (float)posY);
 }

@@ -1,7 +1,7 @@
 #pragma once
-class HEROE;
-class ENEMIGO;
 #include <SFML/Graphics.hpp>
+
+class HEROE;
 
 class MAPA : public sf::Drawable, public sf::Transformable {
 public:

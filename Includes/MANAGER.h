@@ -1,13 +1,11 @@
 #pragma once
-#include <fstream>
 #include <vector>
 #include <HEROE.h>
-#include <ENEMIGO.h>
 
 void app();
-void turnoHeroe(HEROE &enlace, ENEMIGO &rival);
-void turnoEnemigo(ENEMIGO &rival, HEROE &enlace);
+void turnoHeroe(HEROE &enlace, NPC &rival);
+void turnoEnemigo(NPC &rival, HEROE &enlace);
 std::vector<int> copiarDeArchivo(const std::string&);
-void patrullar(ENEMIGO &obj, sf::Vector2f posIzq, sf::Vector2f posDer);
+void patrullar(NPC &obj, sf::Vector2f posIzq, sf::Vector2f posDer);
 std::string generarDialogo(int numero);
-void eventoBatalla(ENEMIGO&, HEROE&, sf::RenderWindow&);
+void eventoBatalla(NPC&, HEROE&, sf::RenderWindow&);

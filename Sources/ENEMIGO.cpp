@@ -1,5 +1,5 @@
 #include "../Includes/ENEMIGO.h"
-
+/*
 ENEMIGO::ENEMIGO() :
     _textura("IMG/link.png"),
     _sprite(_textura)
@@ -43,3 +43,4 @@ void ENEMIGO::setDirrecionMov(bool derecha) {
 bool ENEMIGO::getDireccionMov() {
     return _moviendoDerecha;
 }
+*/

@@ -2,6 +2,7 @@
 #include "PANTALLA.h"
 #include <cstring>
 #include <stdio.h>
+#include <iostream>
 
 using namespace std;
 
@@ -11,6 +12,8 @@ void app() {
 
     sf::RenderWindow window(sf::VideoMode({pantalla->getAncho(), pantalla->getLargo()}), "My GAME");
     window.setFramerateLimit(60);
+    sf::Image img("IMG/EnlaceFrente.png");
+    window.setIcon(img);
 
     pantalla->menu(window);
 

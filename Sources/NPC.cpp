@@ -49,7 +49,9 @@ std::string NPC::getDialogo(){
 };
 
 void NPC::recibirGolpe(int cantGolpe) {
-    _vida -= cantGolpe;
+    if(_estaDefendido) _vida -= cantGolpe - defensa();
+
+    if (!_estaDefendido) _vida -= cantGolpe;
 }
 
 int NPC::calcularGolpe(int fuerza) {
@@ -141,16 +143,16 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
 
     // TECLAS DE MOVIMIENTO
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-       _velocidad.y = -3;
+       _velocidad.y = -2.5; // 800 - 576
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        _velocidad.x = -3;
+        _velocidad.x = -2.5;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-       _velocidad.y = 3;
+       _velocidad.y = 2.5;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        _velocidad.x = 3;
+        _velocidad.x = 2.5;
     }
 
     // DIRECCION DE SPRITE AL CAMINAR
@@ -175,7 +177,7 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
     }
 }
 
-void NPC::patrullar(int posIzq, int posDer) {
+void NPC::patrullar(int posIzq, int posDer /*limite*/) {
     int nuevaPosX;
     int posY = _sprite.getPosition().y;
 

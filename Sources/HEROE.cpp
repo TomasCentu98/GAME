@@ -48,9 +48,9 @@ void HEROE::curar(){
     if(_mana >=20){
         if(_vida<100){
             _vida+=15;
-        if(_vida>100){
-            _vida=100;
-        }
+            if(_vida>100){
+                _vida=100;
+            }
         }
         _mana -= 20;
     }
@@ -58,13 +58,9 @@ void HEROE::curar(){
 
 void HEROE::hechizo(NPC &rival){
     if(_mana >= 30){
-        if(!rival.getDefensa()){
-            rival.recibirGolpe(_fuerza*1.3);
-        }
-       else{rival.recibirGolpe((_fuerza*1.3)-rival.defensa());
-       }
-       _mana -=30;
+        rival.recibirGolpe(_fuerza*1.3);
     }
+    _mana -=30;
 }
 
 int HEROE::getMana(){

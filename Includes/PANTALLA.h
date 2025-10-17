@@ -10,9 +10,10 @@ public:
     void creditos(sf::RenderWindow &window);
     void menu(sf::RenderWindow &window);
     void pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window);
-
-    float getAncho();
-    float getLargo();
+    void cortinaInicio(sf::RenderWindow &window);
+    void cortinaFin(sf::RenderWindow &window);
+    unsigned int getAncho();
+    unsigned int getLargo();
     ~PANTALLA();
 
 private:

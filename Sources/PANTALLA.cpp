@@ -48,8 +48,11 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             if (!enlace.estaColisionando(eneg1pan1.getSprite().getPosition()))
             {
                 eneg1pan1.patrullar(250, 562);
-                if (enlace.estaColisionando(eneg1pan1.getSprite().getPosition()))
+
+                if (enlace.estaColisionando(eneg1pan1.getSprite().getPosition())) {
+                    cortinaInicio(window);
                     pelea(eneg1pan1, enlace, window);
+                }
             }
         }
 
@@ -117,18 +120,12 @@ void PANTALLA::menu(sf::RenderWindow &window) {
 
     // BOTONES
     sf::RectangleShape botonJugar( {160.f , 40.f} );
-        botonJugar.setOutlineThickness(2.5);
-        botonJugar.setOutlineColor(sf::Color::Black);
         botonJugar.setFillColor(sf::Color::Transparent);
         botonJugar.setPosition( {350.f , 410.f} );
     sf::RectangleShape botonCreditos( {160.f , 40.f} );
-        botonCreditos.setOutlineThickness(2.5);
-        botonCreditos.setOutlineColor(sf::Color::Black);
         botonCreditos.setFillColor(sf::Color::Transparent);
         botonCreditos.setPosition( {350.f , 459.f} );
     sf::RectangleShape botonSalir( {160.f , 40.f} );
-        botonSalir.setOutlineThickness(2.5);
-        botonSalir.setOutlineColor(sf::Color::Black);
         botonSalir.setFillColor(sf::Color::Transparent);
         botonSalir.setPosition( {350.f , 505.f} );
 
@@ -146,7 +143,7 @@ void PANTALLA::menu(sf::RenderWindow &window) {
             if(botonJugar.getGlobalBounds().contains({(float) mousePos.x ,  (float) mousePos.y}))
             {
                 HEROE *enlace = new HEROE();
-                enlace->setSprite("IMG/link.png");
+                enlace->setSprite("IMG/EnlaceFrente.png");
                 gameLoop(*enlace, window);
                 delete enlace;
             }
@@ -330,6 +327,8 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
     }
 
+    cortinaFin(window);
+
     enlace.setVida(100.f);
     enlace.setMana(100);
     enlace.setBatallando(false);
@@ -337,12 +336,67 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     rival.posicionar(posR.x, posR.y);
 }
 
-float PANTALLA::getAncho() {
+unsigned int PANTALLA::getAncho() {
     return _ANCHO;
 }
 
-float PANTALLA::getLargo() {
+unsigned int PANTALLA::getLargo() {
     return _LARGO;
 }
+
+void PANTALLA::cortinaInicio(sf::RenderWindow &window) {
+
+    sf::RectangleShape cortina(sf::Vector2f({_ANCHO, _LARGO}));
+    cortina.setFillColor(sf::Color::White);
+    float duracion = 0.25;
+
+    sf::Clock relojito;
+
+    while (relojito.getElapsedTime().asSeconds() < duracion) {
+
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) window.close();
+        }
+
+        float transparencia = (relojito.getElapsedTime().asSeconds() / duracion) * 255;
+        float colorcito = 255 - (relojito.getElapsedTime().asSeconds() / duracion);
+        cortina.setFillColor(sf::Color(colorcito,colorcito,colorcito,transparencia));
+
+        window.clear();
+
+        window.draw(cortina);
+
+        window.display();
+    }
+}
+
+void PANTALLA::cortinaFin(sf::RenderWindow &window) {
+
+    sf::RectangleShape cortina(sf::Vector2f({_ANCHO, _LARGO}));
+    cortina.setFillColor(sf::Color::White);
+    float duracion = 0.25;
+
+    sf::Clock relojito;
+
+    while (relojito.getElapsedTime().asSeconds() > duracion) {
+
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) window.close();
+        }
+
+        float transparencia = 255 - (relojito.getElapsedTime().asSeconds() / duracion) * 255;
+        float colorcito = 255 - (relojito.getElapsedTime().asSeconds() / duracion);
+        cortina.setFillColor(sf::Color(colorcito,colorcito,colorcito,transparencia));
+
+        window.clear();
+
+        window.draw(cortina);
+
+        window.display();
+    }
+}
+
 
 PANTALLA::~PANTALLA() {}

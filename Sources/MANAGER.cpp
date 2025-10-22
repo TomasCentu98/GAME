@@ -46,7 +46,7 @@ std::vector<int> copiarDeArchivo(const std::string& nombreArchivo) {
 
 }
 
-std::string generarDialogo(int numero){
+char* generarDialogo(int numero){
 
     FILE *archivo;
 
@@ -75,8 +75,5 @@ std::string generarDialogo(int numero){
 
     fclose(archivo);
 
-    // constructor de Sting para convertirlo
-    std::string textoSalida(dialogoEnArchivo);
-
-    return textoSalida;
+    return dialogoEnArchivo;
 }

@@ -12,22 +12,28 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     MAPA mapa(_ANCHO, _LARGO);
 
     enlace.posicionar(561 , 432);
+    enlace.setNombre("jose");
 
     // CAMBIAR POR RECTANGLE SHAPE Y CREAR DENTRO DE EVENTO
     NPC eneg1pan1;
     eneg1pan1.setSprite("IMG/link.png");
+    eneg1pan1.setNombre("pepe");
 
     NPC eneg2pan1;
     eneg2pan1.setSprite("IMG/link.png");
+    eneg1pan1.setNombre("pepe");
 
     NPC eneg1pan2;
     eneg1pan2.setSprite("IMG/link.png");
+    eneg1pan1.setNombre("pepe");
 
     NPC eneg2pan2;
     eneg2pan2.setSprite("IMG/link.png");
+    eneg1pan1.setNombre("pepe");
 
     NPC gefe;
     gefe.setSprite("IMG/link.png");
+    eneg1pan1.setNombre("pepe");
 
     bool enemigosCreadosPan1 = false;
     bool enemigosCreadosPan2 = false;
@@ -50,7 +56,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
                 eneg1pan1.patrullar(250, 562);
 
                 if (enlace.estaColisionando(eneg1pan1.getSprite().getPosition())) {
-                    cortinaInicio(window);
+                    if(eneg1pan1.getVida() > 0) cortinaInicio(window);
                     pelea(eneg1pan1, enlace, window);
                 }
             }
@@ -144,6 +150,8 @@ void PANTALLA::menu(sf::RenderWindow &window) {
             {
                 HEROE *enlace = new HEROE();
                 enlace->setSprite("IMG/EnlaceFrente.png");
+                enlace->setNombre("Enlace");
+                enlace->setDialogo("hola");
                 gameLoop(*enlace, window);
                 delete enlace;
             }
@@ -204,13 +212,18 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     enlace.posicionar(250.f, 250.f);
     rival.posicionar(450.f, 250.f);
 
+    // LATA
+    sf::RectangleShape lata({40.f, 40.f});
+    sf::Texture lataTexture("IMG/lata.png");
+    lata.setTexture(&lataTexture);
+    lata.setPosition({30.f , 30.f});
+
     // datos para turnos
     bool turnoH = true;
     bool turnoE = false;
     bool botonApretado = false;
-    sf::Clock relojTurno;
-    sf::Time tiempoEspera = sf::seconds(0.5f);
-    bool esperando = false;
+    bool turnoHecho = false;
+    bool enter = false;
 
     // crea escena de pelea
     MAPA_PELEA mapita;
@@ -222,6 +235,8 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     const std::string vidaMaxH = std::to_string(enlace.getVida());
     const std::string manaMax = std::to_string(enlace.getMana());
     const std::string vidaMaxEneg = std::to_string(rival.getVida());
+    const std::string nombreEnemigo = rival.getNombre();
+    const std::string nombreHeroe = enlace.getNombre();
 
     while (rival.getVida() > 0) {
 
@@ -234,11 +249,11 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         if (enlace.getVida() <= 0) break;
 
         // texto de la vida del enemigo
-        std::string textVE = "Goblin: \n" + std::to_string(rival.getVida()) + " | " + vidaMaxEneg;
+        std::string textVE = nombreEnemigo + ": \n" + std::to_string(rival.getVida()) + " | " + vidaMaxEneg;
         mapita._vidaEnemigo.setString(textVE);
 
         // texto de datos del jugador
-        std::string text1 = "Enlace: \n" + std::to_string(enlace.getVida())
+        std::string text1 = nombreHeroe + ": \n" + std::to_string(enlace.getVida())
                             + " | " + vidaMaxH
                             + "\n" + std::to_string(enlace.getMana()) + " | " + manaMax;
         std::string textHeroe = text1 ;
@@ -249,11 +264,25 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
         window.clear(sf::Color::Black);
 
-        if (turnoH && !esperando)
+        // dibuja el fondo y la interfaz
+        for (auto cuadro : mapita.getRectangles())
+        {
+            window.draw(cuadro);
+        }
+            window.draw(mapita._vidaEnemigo);
+            window.draw(mapita._vidaHeroe);
+            window.draw(lata);
+            window.draw(enlace);
+            window.draw(rival);
+            window.draw(mapita._textoExplicativo);
+
+        window.display();
+
+        if (turnoH)
         {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
             {
-                if (!botonApretado )
+                if (!botonApretado)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                     botonApretado = true;
@@ -262,69 +291,58 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                     {
                         mapita._textoExplicativo.setString(" PEGANDO ");
                         enlace.golpear(rival);
+                        turnoH = false;
                     }
                     if (mapita.getRectangles()[5].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita._textoExplicativo.setString(" DEFENDIENDO ");
                         enlace.setDefensa(true);
+                        turnoH = false;
                     }
                     if (mapita.getRectangles()[6].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita._textoExplicativo.setString(" CURANDO ");
                         enlace.curar();
+                        turnoH = false;
                     }
                     if (mapita.getRectangles()[7].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita._textoExplicativo.setString(" PIU PIU ");
                         enlace.hechizo(rival);
+                        turnoH = false;
                     }
-
-                    relojTurno.restart();
-                    esperando = true;
-
                 } else {botonApretado = false;}
             }
         }
 
-        if (turnoH && esperando && relojTurno.getElapsedTime() >= tiempoEspera) {
-            turnoH = false;
-            turnoE = true;
-            esperando = false;
+        if(!turnoH && !enter) {
+            if (!turnoHecho) {
+                std::string text = mapita._textoExplicativo.getString() + '\n' + "Presione enter para terminar turno...";
+                mapita._textoExplicativo.setString(text);
+                turnoHecho = true;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+                enter = true;
+                turnoE = true;
+                turnoHecho = false;
+            }
         }
 
-        if (turnoE && !esperando) {
+        if (turnoE && enter) {
             if (decisionRival == 1) {
                 mapita._textoExplicativo.setString(" ENEMIGO PEGANDO ");
                 rival.golpear(enlace);
+                turnoE = false;
+                turnoH = true;
             } else {
                 mapita._textoExplicativo.setString(" ENEMIGO DEFENDIDO ");
                 rival.setDefensa(true);
+                turnoE = false;
+                turnoH = true;
             }
 
-            relojTurno.restart();
-            esperando = true;
-            turnoE = false;
+            enter = false;
         }
-
-        if (!turnoE && esperando && relojTurno.getElapsedTime() >= tiempoEspera) {
-            turnoH = true;
-            turnoE = false;
-            esperando = false;
-        }
-
-        // dibuja el fondo y la interfaz
-        for (auto cuadro : mapita.getRectangles())
-        {
-            window.draw(cuadro);
-        }
-            window.draw(mapita._vidaEnemigo);
-            window.draw(mapita._vidaHeroe);
-            window.draw(enlace);
-            window.draw(rival);
-            window.draw(mapita._textoExplicativo);
-
-        window.display();
-
     }
 
     cortinaFin(window);

@@ -13,10 +13,10 @@ class NPC : public sf::Drawable {
         void setFuerza (int);
         int getVida();
         int getFuerza();
-        void setNombre(std::string);
-        std::string getNombre();
-        void setDialogo(std::string);
-        std::string getDialogo();
+        void setNombre(const char *);
+        char * getNombre();
+        void setDialogo(const char *);
+        char * getDialogo();
         void recibirGolpe(int);
         int calcularGolpe(int);
         /****/
@@ -28,14 +28,14 @@ class NPC : public sf::Drawable {
         void setDirrecionMov(bool);
         bool estaColisionando(sf::Vector2f);
         sf::Sprite getSprite();
-        void setSprite(std::string);
+        void setSprite(const char *);
         void posicionar(float, float);
         virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
     protected:
-        bool _estaDefendido;
+        bool _estaDefendido = false;
         int generarFuerza(int);
-        const char *_dialogo;
-        const char *_nombre;
+        char _dialogo[200] = {};
+        char _nombre[50] = {};
         int _vida;
         int _fuerza;
     private:

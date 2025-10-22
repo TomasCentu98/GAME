@@ -1,5 +1,6 @@
 #include "../Includes/NPC.h"
 #include "HEROE.h"
+#include <cstring>
 
 NPC::NPC() :
     _textura("IMG/link.png"),
@@ -30,22 +31,20 @@ int NPC::getFuerza(){
     return _fuerza;
 };
 
-void NPC::setNombre(std::string nombre){
-    _nombre = nombre.data();
+void NPC::setNombre(const char *nombre){
+    strcpy(_nombre, nombre);
 };
 
-std::string NPC::getNombre(){
-    std::string nombre(_nombre);
-    return nombre;
+char* NPC::getNombre(){
+    return _nombre;
 };
 
-void NPC::setDialogo(std::string dialogo){
-    _dialogo = dialogo.data();
+void NPC::setDialogo(const char *dialogo){
+    strcpy(_dialogo, dialogo);
 };
 
-std::string NPC::getDialogo(){
-    std::string dialogo(_dialogo);
-    return dialogo;
+char* NPC::getDialogo(){
+    return _dialogo;
 };
 
 void NPC::recibirGolpe(int cantGolpe) {
@@ -86,7 +85,7 @@ bool NPC::getDireccionMov() {
 
 bool NPC::getDefensa() {
     return _estaDefendido;
-};
+}
 
 void NPC::setDefensa(bool defensa){
     _estaDefendido = defensa;
@@ -94,8 +93,8 @@ void NPC::setDefensa(bool defensa){
 
 // DATOS PARA VIDEO
 
-void NPC::setSprite(std::string txt) {
-    _textura.loadFromFile(txt),
+void NPC::setSprite(const char *txt) {
+    _textura.loadFromFile(txt);
     _sprite.setTexture(_textura, true);
 }
 

@@ -22,28 +22,26 @@ void app() {
 }
 
 // lee un .txt y copia la lista de numeros que tenga dentro
-std::vector<int> copiarDeArchivo(const std::string& nombreArchivo) {
+int* copiarDeArchivo(const char* nombreArchivo) {
 
-    const char* path = nombreArchivo.data();
+    FILE *archivo = fopen(nombreArchivo, "rb");
 
-    FILE *archivo = fopen(path, "rb");
+    const int CANTIDAD_ARRAY = 475;
+    int* listaCopiada = new int[CANTIDAD_ARRAY];
 
-    std::vector<int> listaCopiada;
-
-    int numero;
+    int numero = 0;
 
     if (!archivo) {
         return listaCopiada;
         exit(2);
     }
 
-    while (fscanf(archivo, "%d", &numero) == 1) {
-        listaCopiada.push_back(numero);
+    while(fscanf(archivo, "%d", &listaCopiada[numero]) == 1) {
+        numero++;
     }
 
     fclose(archivo);
     return listaCopiada;
-
 }
 
 char* generarDialogo(int numero){

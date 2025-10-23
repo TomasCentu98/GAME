@@ -184,12 +184,14 @@ void NPC::patrullar(int posIzq, int posDer /*limite*/) {
         setVelocidad(2,0);
         nuevaPosX = _sprite.getPosition().x + getVelocidad().x;
         if (_sprite.getPosition().x >= posDer) {
+            _sprite.setScale({-1.f, 1.f});
             setDirrecionMov(false);
         }
     } else {
         setVelocidad(-2,0);
         nuevaPosX = _sprite.getPosition().x + getVelocidad().x;
         if (_sprite.getPosition().x <= posIzq) {
+            _sprite.setScale({1.f, 1.f});
             setDirrecionMov(true);
         }
     }

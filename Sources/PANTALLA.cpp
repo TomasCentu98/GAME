@@ -12,28 +12,26 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     MAPA mapa(_ANCHO, _LARGO);
 
     enlace.posicionar(561 , 432);
-    enlace.setNombre("jose");
 
-    // CAMBIAR POR RECTANGLE SHAPE Y CREAR DENTRO DE EVENTO
     NPC eneg1pan1;
-    eneg1pan1.setSprite("IMG/link.png");
-    eneg1pan1.setNombre("pepe");
+    eneg1pan1.setSprite("IMG/GoblinDer2.png");
+    eneg1pan1.setNombre("pepeASD");
 
     NPC eneg2pan1;
-    eneg2pan1.setSprite("IMG/link.png");
-    eneg1pan1.setNombre("pepe");
+    eneg2pan1.setSprite("IMG/GoblinDer2.png");
+    eneg2pan1.setNombre("pepeZXC");
 
     NPC eneg1pan2;
-    eneg1pan2.setSprite("IMG/link.png");
-    eneg1pan1.setNombre("pepe");
+    eneg1pan2.setSprite("IMG/GoblinDer2.png");
+    eneg1pan2.setNombre("pepeRWER");
 
     NPC eneg2pan2;
-    eneg2pan2.setSprite("IMG/link.png");
-    eneg1pan1.setNombre("pepe");
+    eneg2pan2.setSprite("IMG/GoblinDer2.png");
+    eneg2pan2.setNombre("pepeTRFS");
 
-    NPC gefe;
-    gefe.setSprite("IMG/link.png");
-    eneg1pan1.setNombre("pepe");
+    NPC jefe;
+    jefe.setSprite("IMG/DragFrente2.png");
+    jefe.setNombre("pepeCAQSD");
 
     bool enemigosCreadosPan1 = false;
     bool enemigosCreadosPan2 = false;
@@ -52,13 +50,39 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
         if (!enlace.getBatallando())
         {
             if (!enlace.estaColisionando(eneg1pan1.getSprite().getPosition()))
-            {
-                eneg1pan1.patrullar(250, 562);
+                eneg1pan1.patrullar(300, 500);
 
-                if (enlace.estaColisionando(eneg1pan1.getSprite().getPosition())) {
-                    if(eneg1pan1.getVida() > 0) cortinaInicio(window);
-                    pelea(eneg1pan1, enlace, window);
-                }
+            if (enlace.estaColisionando(eneg1pan1.getSprite().getPosition()))
+            {
+                if(eneg1pan1.getVida() > 0) cortinaInicio(window);
+                pelea(eneg1pan1, enlace, window);
+            }
+
+            if (!enlace.estaColisionando(eneg2pan1.getSprite().getPosition()))
+                eneg2pan1.patrullar(250, 500);
+
+            if (enlace.estaColisionando(eneg2pan1.getSprite().getPosition()))
+            {
+                if(eneg2pan1.getVida() > 0) cortinaInicio(window);
+                pelea(eneg2pan1, enlace, window);
+            }
+
+            if (!enlace.estaColisionando(eneg1pan2.getSprite().getPosition()))
+                eneg1pan2.patrullar(250, 600);
+
+            if (enlace.estaColisionando(eneg1pan2.getSprite().getPosition()))
+            {
+                if(eneg1pan2.getVida() > 0) cortinaInicio(window);
+                pelea(eneg1pan2, enlace, window);
+            }
+
+            if (!enlace.estaColisionando(eneg2pan2.getSprite().getPosition()))
+                eneg2pan2.patrullar(250, 700);
+
+            if (enlace.estaColisionando(eneg2pan2.getSprite().getPosition()))
+            {
+                if(eneg2pan2.getVida() > 0) cortinaInicio(window);
+                pelea(eneg2pan2, enlace, window);
             }
         }
 
@@ -73,7 +97,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
         // PARA REEUBICAR ENEMIGOS AL CAMBIAR MAPA
         if(mapa.getMapaActual() == 1 && !enemigosCreadosPan1)
         {
-            gefe.posicionar(-32,-32);
+            jefe.posicionar(-32,-32);
             eneg1pan2.posicionar(-32,-32);
             eneg2pan2.posicionar(-32,-32);
             eneg1pan1.posicionar(255, 432);
@@ -85,7 +109,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
         }
         if(mapa.getMapaActual() == 2 && !enemigosCreadosPan2)
         {
-            gefe.posicionar(-32,-32);
+            jefe.posicionar(-32,-32);
             eneg1pan2.posicionar(200, 432);
             eneg2pan2.posicionar(465 , 150);
             eneg1pan1.posicionar(-32,-32);
@@ -97,7 +121,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
         }
         if(mapa.getMapaActual() == 3 && !enemigosCreadosPan3)
         {
-            gefe.posicionar(300,300);
+            jefe.posicionar(300,300);
             eneg1pan2.posicionar(-32,-32);
             eneg2pan2.posicionar(-32,-32);
             eneg1pan1.posicionar(-32,-32);
@@ -108,12 +132,20 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             enemigosCreadosPan3 = true;
         }
 
-        // muestra solo enemigos "vivos"
-        if (eneg1pan1.getVida() > 0) window.draw(eneg1pan1);
-        if (eneg2pan1.getVida() > 0) window.draw(eneg2pan1);
-        if (eneg1pan2.getVida() > 0) window.draw(eneg1pan2);
-        if (eneg2pan2.getVida() > 0) window.draw(eneg2pan2);
-        if (gefe.getVida() > 0) window.draw(gefe);
+        if (eneg1pan1.getVida() <= 0) eneg1pan1.posicionar(-32,-32);
+        if (eneg2pan1.getVida() <= 0) eneg2pan1.posicionar(-32,-32);
+        if (eneg1pan2.getVida() <= 0) eneg1pan2.posicionar(-32,-32);
+        if (eneg2pan2.getVida() <= 0) eneg2pan2.posicionar(-32,-32);
+
+        if(mapa.getMapaActual() != 0)
+        {
+            // muestra solo enemigos "vivos"
+            if (eneg1pan1.getVida() > 0) window.draw(eneg1pan1);
+            if (eneg2pan1.getVida() > 0) window.draw(eneg2pan1);
+            if (eneg1pan2.getVida() > 0) window.draw(eneg1pan2);
+            if (eneg2pan2.getVida() > 0) window.draw(eneg2pan2);
+            if (jefe.getVida() > 0) window.draw(jefe);
+        }
 
         window.display();
     }
@@ -211,6 +243,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     enlace.setBatallando(true);
     enlace.posicionar(250.f, 250.f);
     rival.posicionar(450.f, 250.f);
+    rival.getSprite().setScale({-1.f, 1.f});
 
     // LATA
     sf::RectangleShape lata({40.f, 40.f});
@@ -232,11 +265,11 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         mapita.iniciar();
 
     //  toma los valores "maximos" de vida y mana
-    const std::string vidaMaxH = std::to_string(enlace.getVida());
-    const std::string manaMax = std::to_string(enlace.getMana());
-    const std::string vidaMaxEneg = std::to_string(rival.getVida());
-    const std::string nombreEnemigo = rival.getNombre();
-    const std::string nombreHeroe = enlace.getNombre();
+    std::string vidaMaxH = std::to_string(enlace.getVida());
+    std::string manaMax = std::to_string(enlace.getMana());
+    std::string vidaMaxEneg = std::to_string(rival.getVida());
+    std::string nombreEnemigo = rival.getNombre();
+    std::string nombreHeroe = enlace.getNombre();
 
     while (rival.getVida() > 0) {
 

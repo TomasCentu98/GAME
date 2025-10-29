@@ -1,7 +1,7 @@
 #include "../Includes/HEROE.h"
 
 HEROE::HEROE() :
-    _textura("IMG/link.png"),
+    _textura("IMG/GoblinFrente2.png"),
     _sprite(_textura)
 {
     _vida = 100;

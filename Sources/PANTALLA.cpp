@@ -3,6 +3,7 @@
 #include "MAPA_PELEA.h"
 #include "PANTALLA.h"
 #include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 PANTALLA::PANTALLA() {}
 
 // INICIO DE JUEGO
@@ -15,7 +16,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
 
     // MAPA
     MAPA mapa(_ANCHO, _LARGO);
-
+    sf::Clock relojito;
     enlace.posicionar(561 , 432);
 
     NPC eneg1pan1;
@@ -50,7 +51,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
         }
 
         // MOVIMIENTO DE JUGADOR
-        enlace.actualizar(mapa, _ANCHO, _LARGO);
+        enlace.actualizar(mapa, _ANCHO, _LARGO, relojito);
 
         if (!enlace.getBatallando())
         {
@@ -198,7 +199,7 @@ void PANTALLA::menu(sf::RenderWindow &window) {
             {
                 musicamenu.stop();
                 HEROE *enlace = new HEROE();
-                enlace->setSprite("IMG/EnlaceFrente.png");
+                enlace->setSprite("IMG/Enlace.png");
                 enlace->setNombre("Enlace");
                 enlace->setDialogo("hola");
                 gameLoop(*enlace, window);

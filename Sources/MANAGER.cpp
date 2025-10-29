@@ -12,7 +12,7 @@ void app() {
 
     sf::RenderWindow window(sf::VideoMode({pantalla->getAncho(), pantalla->getLargo()}), "My GAME");
     window.setFramerateLimit(60);
-    sf::Image img("IMG/EnlaceFrente.png");
+    sf::Image img("IMG/GoblinFrente2.png");
     window.setIcon(img);
 
     pantalla->menu(window);

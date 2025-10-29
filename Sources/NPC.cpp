@@ -3,7 +3,7 @@
 #include <cstring>
 
 NPC::NPC() :
-    _textura("IMG/link.png"),
+    _textura("IMG/GoblinFrente2.png"),
     _sprite(_textura)
 {
     _vida = 100;
@@ -96,6 +96,7 @@ void NPC::setDefensa(bool defensa){
 void NPC::setSprite(const char *txt) {
     _textura.loadFromFile(txt);
     _sprite.setTexture(_textura, true);
+    _sprite.setTextureRect({{0,0},{32,32}});
 }
 
 void NPC::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -115,8 +116,16 @@ bool NPC::estaColisionando(sf::Vector2f areaObj) {
     return false;
 }
 
-void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
+void NPC::actualizar(MAPA &mapaActual, int width, int heigth, sf::Clock relojito) {
     _velocidad = {0, 0};
+
+    const int frameWidth = 32;
+    const int frameHeight = 32;
+    int currentFrame = 0;
+
+    float frameTime = 0.15f;
+
+
 
     sf::Vector2 personajePos = {
         _sprite.getGlobalBounds().getCenter().x,
@@ -142,16 +151,16 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
 
     // TECLAS DE MOVIMIENTO
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-       _velocidad.y = -2.5; // 800 - 576
+       _velocidad.y = -1; // 800 - 576
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        _velocidad.x = -2.5;
+        _velocidad.x = -1;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-       _velocidad.y = 2.5;
+       _velocidad.y = 1;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        _velocidad.x = 2.5;
+        _velocidad.x = 1;
     }
 
     // DIRECCION DE SPRITE AL CAMINAR
@@ -160,6 +169,8 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
     } else if (_velocidad.x > 0) {
         _sprite.setScale({1.f,1.f});
     }
+
+
 
     const int azulejoSize = 32 ;
     const int cantAzulejosX = width / azulejoSize;
@@ -172,8 +183,28 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth) {
     //                     x , y , cant -> 0 + 1 * 25 -> azulejos[25]
     if(mapaActual.esCaminable(azulejoX, azulejoY, cantAzulejosX))
     {
-        _sprite.move(_velocidad); // mover solo si no es sólido
+        _sprite.move( _velocidad * relojito.restart().asSeconds()); // mover solo si no es sólido
     }
+    static float ultimoFrame = 0;
+    ultimoFrame+=relojito.getElapsedTime().asSeconds();
+    if(_velocidad.x !=0 || _velocidad.y !=0){
+        if(ultimoFrame>=frameTime){
+            currentFrame = (currentFrame + 1) % 3;
+            ultimoFrame = 0.f;
+        }
+        else{
+            currentFrame = 1;
+        }
+    }
+
+    int direccion;
+
+    if(_velocidad.y<0) direccion = 3;
+    if(_velocidad.y>0) direccion = 0;
+    if(_velocidad.x<0) direccion = 1;
+    if(_velocidad.x>0) direccion = 2;
+
+    _sprite.setTextureRect({{frameWidth * currentFrame, frameHeight * direccion},{frameWidth, frameHeight}});
 }
 
 void NPC::patrullar(int posIzq, int posDer /*limite*/) {

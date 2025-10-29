@@ -1,5 +1,6 @@
 #pragma once
 #include "MAPA.h"
+#include <SFML/Graphics.hpp>
 
 /// CLASE BASE NPC
 class NPC : public sf::Drawable {
@@ -20,7 +21,7 @@ class NPC : public sf::Drawable {
         void recibirGolpe(int);
         int calcularGolpe(int);
         /****/
-        void actualizar(MAPA&, int, int);
+        void actualizar(MAPA&, int, int, sf::Clock);
         void patrullar(int, int);
         sf::Vector2f getVelocidad();
         void setVelocidad(float, float);

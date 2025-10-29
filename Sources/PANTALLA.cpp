@@ -2,11 +2,16 @@
 #include "MAPA.h"
 #include "MAPA_PELEA.h"
 #include "PANTALLA.h"
-
+#include <SFML/Audio.hpp>
 PANTALLA::PANTALLA() {}
 
 // INICIO DE JUEGO
 void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
+    sf::Music MusicaJuego;
+    MusicaJuego.openFromFile("Musica/Mundo.ogg");
+    MusicaJuego.play();
+    MusicaJuego.setLooping(true);
+    MusicaJuego.setVolume(80);
 
     // MAPA
     MAPA mapa(_ANCHO, _LARGO);
@@ -55,7 +60,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             if (enlace.estaColisionando(eneg1pan1.getSprite().getPosition()))
             {
                 if(eneg1pan1.getVida() > 0) cortinaInicio(window);
+                MusicaJuego.stop();
                 pelea(eneg1pan1, enlace, window);
+                MusicaJuego.play();
             }
 
             if (!enlace.estaColisionando(eneg2pan1.getSprite().getPosition()))
@@ -64,7 +71,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             if (enlace.estaColisionando(eneg2pan1.getSprite().getPosition()))
             {
                 if(eneg2pan1.getVida() > 0) cortinaInicio(window);
+                MusicaJuego.stop();
                 pelea(eneg2pan1, enlace, window);
+                MusicaJuego.play();
             }
 
             if (!enlace.estaColisionando(eneg1pan2.getSprite().getPosition()))
@@ -73,7 +82,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             if (enlace.estaColisionando(eneg1pan2.getSprite().getPosition()))
             {
                 if(eneg1pan2.getVida() > 0) cortinaInicio(window);
+                MusicaJuego.stop();
                 pelea(eneg1pan2, enlace, window);
+                MusicaJuego.play();
             }
 
             if (!enlace.estaColisionando(eneg2pan2.getSprite().getPosition()))
@@ -82,7 +93,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             if (enlace.estaColisionando(eneg2pan2.getSprite().getPosition()))
             {
                 if(eneg2pan2.getVida() > 0) cortinaInicio(window);
+                MusicaJuego.stop();
                 pelea(eneg2pan2, enlace, window);
+                MusicaJuego.play();
             }
         }
 
@@ -155,6 +168,9 @@ void PANTALLA::menu(sf::RenderWindow &window) {
 
     sf::Texture tex("IMG/menu.png");
     sf::Sprite image(tex);
+    sf::Music musicamenu("Musica/Menu.ogg");
+    musicamenu.play();
+    musicamenu.setLooping(true);
 
     // BOTONES
     sf::RectangleShape botonJugar( {160.f , 40.f} );
@@ -180,6 +196,7 @@ void PANTALLA::menu(sf::RenderWindow &window) {
 
             if(botonJugar.getGlobalBounds().contains({(float) mousePos.x ,  (float) mousePos.y}))
             {
+                musicamenu.stop();
                 HEROE *enlace = new HEROE();
                 enlace->setSprite("IMG/EnlaceFrente.png");
                 enlace->setNombre("Enlace");
@@ -235,6 +252,33 @@ void PANTALLA::creditos(sf::RenderWindow &window) {
 }
 
 void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
+
+    sf::Music MusicaPelea;
+    MusicaPelea.openFromFile("Musica/Pelea.ogg");
+    MusicaPelea.play();
+    MusicaPelea.setLooping(true);
+    MusicaPelea.setVolume(25);
+
+    sf::SoundBuffer ataqueEnlace;
+    ataqueEnlace.loadFromFile("Efectos/Golpe.ogg");
+    sf::Sound ataqueE(ataqueEnlace);
+
+    sf::SoundBuffer defensaEnlace;
+    defensaEnlace.loadFromFile("Efectos/Bloqueo.ogg");
+    sf::Sound defensaE(defensaEnlace);
+
+    sf::SoundBuffer hechizoEnlace;
+    hechizoEnlace.loadFromFile("Efectos/Lata.ogg");
+    sf::Sound hechizoE(hechizoEnlace);
+
+    sf::SoundBuffer curacionEnlace;
+    curacionEnlace.loadFromFile("Efectos/Curacion.ogg");
+    sf::Sound curacionE(curacionEnlace);
+
+    sf::SoundBuffer ataqueGoblin;
+    ataqueGoblin.loadFromFile("Efectos/Herida.ogg");
+    sf::Sound ataqueG(ataqueGoblin);
+
     // toma las posiciones para devolverlos al terminar
     const sf::Vector2f posEnlace = enlace.getSprite().getPosition();
     const sf::Vector2f posR = rival.getSprite().getPosition();
@@ -324,24 +368,28 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                     {
                         mapita._textoExplicativo.setString(" PEGANDO ");
                         enlace.golpear(rival);
+                        ataqueE.play();
                         turnoH = false;
                     }
                     if (mapita.getRectangles()[5].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita._textoExplicativo.setString(" DEFENDIENDO ");
                         enlace.setDefensa(true);
+                        defensaE.play();
                         turnoH = false;
                     }
                     if (mapita.getRectangles()[6].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita._textoExplicativo.setString(" CURANDO ");
                         enlace.curar();
+                        curacionE.play();
                         turnoH = false;
                     }
                     if (mapita.getRectangles()[7].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita._textoExplicativo.setString(" PIU PIU ");
                         enlace.hechizo(rival);
+                        hechizoE.play();
                         turnoH = false;
                     }
                 } else {botonApretado = false;}
@@ -365,6 +413,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
             if (decisionRival == 1) {
                 mapita._textoExplicativo.setString(" ENEMIGO PEGANDO ");
                 rival.golpear(enlace);
+                ataqueG.play();
                 turnoE = false;
                 turnoH = true;
             } else {
@@ -385,6 +434,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     enlace.setBatallando(false);
     enlace.posicionar(posEnlace.x, posEnlace.y);
     rival.posicionar(posR.x, posR.y);
+    MusicaPelea.stop();
 }
 
 unsigned int PANTALLA::getAncho() {
@@ -397,7 +447,7 @@ unsigned int PANTALLA::getLargo() {
 
 void PANTALLA::cortinaInicio(sf::RenderWindow &window) {
 
-    sf::RectangleShape cortina(sf::Vector2f({_ANCHO, _LARGO}));
+    sf::RectangleShape cortina(sf::Vector2f({(float) _ANCHO,(float) _LARGO}));
     cortina.setFillColor(sf::Color::White);
     float duracion = 0.25;
 
@@ -424,7 +474,7 @@ void PANTALLA::cortinaInicio(sf::RenderWindow &window) {
 
 void PANTALLA::cortinaFin(sf::RenderWindow &window) {
 
-    sf::RectangleShape cortina(sf::Vector2f({_ANCHO, _LARGO}));
+    sf::RectangleShape cortina(sf::Vector2f({(float)_ANCHO,(float) _LARGO}));
     cortina.setFillColor(sf::Color::White);
     float duracion = 0.25;
 

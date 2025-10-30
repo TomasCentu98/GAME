@@ -62,7 +62,7 @@ void NPC::golpear(HEROE &heroe) {
 }
 
 int NPC::defensa() {
-    int defendido = (rand() % 8) + 1;
+    int defendido = (rand() % 5) + 1;
     return defendido;
 }
 

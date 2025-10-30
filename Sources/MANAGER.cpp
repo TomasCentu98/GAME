@@ -85,8 +85,12 @@ char* dialogosTuto(int dialogo){
 
     const int TAM_BUFFER = 350;
     char* dialogoEnArchivo = new char[TAM_BUFFER];
+    int dialogoActual = 0;
 
-    fread(dialogoEnArchivo, sizeof(dialogoEnArchivo) * dialogo, 1, archivo);
+    while (fgets(dialogoEnArchivo, TAM_BUFFER, archivo)) {
+        if (dialogoActual == dialogo) break;
+        dialogoActual++;
+    }
 
     fclose(archivo);
 

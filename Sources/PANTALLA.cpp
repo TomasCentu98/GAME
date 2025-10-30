@@ -14,7 +14,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     MusicaJuego.openFromFile("Musica/Mundo.ogg");
     MusicaJuego.play();
     MusicaJuego.setLooping(true);
-    MusicaJuego.setVolume(5);
+    MusicaJuego.setVolume(3);
 
     // MAPA
     MAPA mapa(_ANCHO, _LARGO);
@@ -129,7 +129,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             window.draw(arbol);
 
             if (enlace.estaColisionando(vagabundo.getSprite().getPosition())) {
-                tutorial(window, enlace);
+                tutorial(window, enlace, mapa);
             }
         }
 
@@ -189,8 +189,6 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             if (eneg2pan2.getVida() > 0) window.draw(eneg2pan2);
             if (jefe.getVida() > 0) window.draw(jefe);
         }
-
-
 
 
         window.display();
@@ -291,7 +289,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     MusicaPelea.openFromFile("Musica/Pelea.ogg");
     MusicaPelea.play();
     MusicaPelea.setLooping(true);
-    MusicaPelea.setVolume(25);
+    MusicaPelea.setVolume(5);
 
     sf::SoundBuffer ataqueEnlace;
     ataqueEnlace.loadFromFile("Efectos/Golpe.ogg");
@@ -533,47 +531,66 @@ void PANTALLA::cortinaFin(sf::RenderWindow &window) {
     }
 }
 
-void PANTALLA::tutorial(sf::RenderWindow &window, HEROE &enlace) {
+void PANTALLA::tutorial(sf::RenderWindow &window, HEROE &enlace, MAPA &mapa) {
 
 
-    sf::RectangleShape cuadroTexto({500.f , 200.f});
-    cuadroTexto.setPosition({200.f , 350.f});
+    sf::RectangleShape cuadroTexto({650.f , 100.f});
+    cuadroTexto.setPosition({100.f , 350.f});
     cuadroTexto.setFillColor(sf::Color::Black);
     cuadroTexto.setOutlineThickness(1);
 
-    sf::RectangleShape imgInterfaz({200.f, 350.f});
+    sf::RectangleShape imgInterfaz({150.f, 200.f});
     sf::Texture texture("IMG/HUD_batalla.png");
     imgInterfaz.setTexture(&texture);
-    imgInterfaz.setPosition({500.f, 150.f});
+    imgInterfaz.setPosition({350.f, 130.f});
+
+
+    NPC vagabundo;
+    vagabundo.setSprite("IMG/cirujano.png");
+    vagabundo.setNombre("charly");
+    vagabundo.posicionar(250, 200);
+
+    sf::RectangleShape arbol({32.f, 64.f});
+    sf::Texture textArbol("IMG/Arbolito.png");
+    arbol.setTexture(&textArbol);
+    arbol.setPosition({260.f, 150.f});
 
     sf::Font fuente("MAPAS/fuente.ttf");
     sf::Text texto(fuente, "texto piola");
-    int dialogo = 1;
+    texto.setCharacterSize(16);
+    int dialogo = 0;
 
-    std::string dialogoTraido = dialogosTuto(dialogo);
-    texto.setString(dialogoTraido);
-
-    texto.setPosition({220.f, 360.f});
+    texto.setString(dialogosTuto(dialogo));
+    texto.setPosition({110.f, 360.f});
     texto.setFillColor(sf::Color::White);
+
+    bool verif = false;
+    bool avanzarDialogo = false;
 
     while(window.isOpen()) {
 
-        bool avanzarDialogo = false;
 
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>()) window.close();
         }
 
+        window.clear();
+
+        window.draw(mapa);
         window.draw(cuadroTexto);
         window.draw(texto);
-        //if (dialogo == 3) window.draw(imgInterfaz);
+        window.draw(vagabundo);
+        window.draw(arbol);
+        if (dialogo >= 3) window.draw(imgInterfaz);
 
-        if (!avanzarDialogo) {
-           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+
+        if (!verif) {
+           std::string txt = texto.getString() + '\n' + "Presione enter para terminar turno...";
+
+           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) && !avanzarDialogo) {
                 dialogo++;
-                dialogoTraido = dialogosTuto(dialogo);
-                avanzarDialogo = true;
+                texto.setString(dialogosTuto(dialogo));
                 if (dialogo == 10) break;
             }
         }

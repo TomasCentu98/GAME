@@ -12,7 +12,7 @@ public:
     void pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window);
     void cortinaInicio(sf::RenderWindow &window);
     void cortinaFin(sf::RenderWindow &window);
-    void tutorial(sf::RenderWindow &, HEROE &);
+    void tutorial(sf::RenderWindow &, HEROE &, MAPA &);
     unsigned int getAncho();
     unsigned int getLargo();
     ~PANTALLA();

@@ -2,8 +2,10 @@
 #include "MAPA.h"
 #include "MAPA_PELEA.h"
 #include "PANTALLA.h"
+#include "MANAGER.h"
 #include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
+#include <cstring>
+
 PANTALLA::PANTALLA() {}
 
 // INICIO DE JUEGO
@@ -12,33 +14,45 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     MusicaJuego.openFromFile("Musica/Mundo.ogg");
     MusicaJuego.play();
     MusicaJuego.setLooping(true);
-    MusicaJuego.setVolume(80);
+    MusicaJuego.setVolume(5);
 
     // MAPA
     MAPA mapa(_ANCHO, _LARGO);
     sf::Clock relojito;
+    sf::Clock relojitoEnemigo;
     enlace.posicionar(561 , 432);
 
+    NPC vagabundo;
+    vagabundo.setSprite("IMG/cirujano.png");
+    vagabundo.setNombre("charly");
+    vagabundo.posicionar(250, 200);
+
+    sf::RectangleShape arbol({32.f, 64.f});
+    sf::Texture textArbol("IMG/Arbolito.png");
+    arbol.setTexture(&textArbol);
+    arbol.setPosition({260.f, 150.f});
+
     NPC eneg1pan1;
-    eneg1pan1.setSprite("IMG/GoblinDer2.png");
+    eneg1pan1.setSprite("IMG/goblin.png");
     eneg1pan1.setNombre("pepeASD");
 
     NPC eneg2pan1;
-    eneg2pan1.setSprite("IMG/GoblinDer2.png");
+    eneg2pan1.setSprite("IMG/goblin.png");
     eneg2pan1.setNombre("pepeZXC");
 
     NPC eneg1pan2;
-    eneg1pan2.setSprite("IMG/GoblinDer2.png");
+    eneg1pan2.setSprite("IMG/goblin.png");
     eneg1pan2.setNombre("pepeRWER");
 
     NPC eneg2pan2;
-    eneg2pan2.setSprite("IMG/GoblinDer2.png");
+    eneg2pan2.setSprite("IMG/goblin.png");
     eneg2pan2.setNombre("pepeTRFS");
 
     NPC jefe;
     jefe.setSprite("IMG/DragFrente2.png");
     jefe.setNombre("pepeCAQSD");
 
+    bool tuto = true;
     bool enemigosCreadosPan1 = false;
     bool enemigosCreadosPan2 = false;
     bool enemigosCreadosPan3 = false;
@@ -56,7 +70,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
         if (!enlace.getBatallando())
         {
             if (!enlace.estaColisionando(eneg1pan1.getSprite().getPosition()))
-                eneg1pan1.patrullar(300, 500);
+                eneg1pan1.patrullar(300, 500, relojitoEnemigo);
 
             if (enlace.estaColisionando(eneg1pan1.getSprite().getPosition()))
             {
@@ -67,7 +81,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             }
 
             if (!enlace.estaColisionando(eneg2pan1.getSprite().getPosition()))
-                eneg2pan1.patrullar(250, 500);
+                eneg2pan1.patrullar(250, 500, relojitoEnemigo);
 
             if (enlace.estaColisionando(eneg2pan1.getSprite().getPosition()))
             {
@@ -78,7 +92,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             }
 
             if (!enlace.estaColisionando(eneg1pan2.getSprite().getPosition()))
-                eneg1pan2.patrullar(250, 600);
+                eneg1pan2.patrullar(250, 600, relojitoEnemigo);
 
             if (enlace.estaColisionando(eneg1pan2.getSprite().getPosition()))
             {
@@ -89,7 +103,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             }
 
             if (!enlace.estaColisionando(eneg2pan2.getSprite().getPosition()))
-                eneg2pan2.patrullar(250, 700);
+                eneg2pan2.patrullar(250, 700, relojitoEnemigo);
 
             if (enlace.estaColisionando(eneg2pan2.getSprite().getPosition()))
             {
@@ -103,14 +117,29 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
         // CONTROLA EL PASO DE MAPAS
         mapa.chequeoPasoDeMapa(enlace);
 
+
+
         window.clear(sf::Color::Black);
 
         window.draw(mapa);
+
+
+        if (tuto) {
+            window.draw(vagabundo);
+            window.draw(arbol);
+
+            if (enlace.estaColisionando(vagabundo.getSprite().getPosition())) {
+                tutorial(window, enlace);
+            }
+        }
+
         window.draw(enlace);
 
         // PARA REEUBICAR ENEMIGOS AL CAMBIAR MAPA
         if(mapa.getMapaActual() == 1 && !enemigosCreadosPan1)
         {
+            vagabundo.posicionar(-32,-32);
+            arbol.setPosition({-32,-32});
             jefe.posicionar(-32,-32);
             eneg1pan2.posicionar(-32,-32);
             eneg2pan2.posicionar(-32,-32);
@@ -161,6 +190,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             if (jefe.getVida() > 0) window.draw(jefe);
         }
 
+
+
+
         window.display();
     }
 }
@@ -172,6 +204,7 @@ void PANTALLA::menu(sf::RenderWindow &window) {
     sf::Music musicamenu("Musica/Menu.ogg");
     musicamenu.play();
     musicamenu.setLooping(true);
+    musicamenu.setVolume(60);
 
     // BOTONES
     sf::RectangleShape botonJugar( {160.f , 40.f} );
@@ -498,6 +531,60 @@ void PANTALLA::cortinaFin(sf::RenderWindow &window) {
 
         window.display();
     }
+}
+
+void PANTALLA::tutorial(sf::RenderWindow &window, HEROE &enlace) {
+
+
+    sf::RectangleShape cuadroTexto({500.f , 200.f});
+    cuadroTexto.setPosition({200.f , 350.f});
+    cuadroTexto.setFillColor(sf::Color::Black);
+    cuadroTexto.setOutlineThickness(1);
+
+    sf::RectangleShape imgInterfaz({200.f, 350.f});
+    sf::Texture texture("IMG/HUD_batalla.png");
+    imgInterfaz.setTexture(&texture);
+    imgInterfaz.setPosition({500.f, 150.f});
+
+    sf::Font fuente("MAPAS/fuente.ttf");
+    sf::Text texto(fuente, "texto piola");
+    int dialogo = 1;
+
+    std::string dialogoTraido = dialogosTuto(dialogo);
+    texto.setString(dialogoTraido);
+
+    texto.setPosition({220.f, 360.f});
+    texto.setFillColor(sf::Color::White);
+
+    while(window.isOpen()) {
+
+        bool avanzarDialogo = false;
+
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) window.close();
+        }
+
+        window.draw(cuadroTexto);
+        window.draw(texto);
+        //if (dialogo == 3) window.draw(imgInterfaz);
+
+        if (!avanzarDialogo) {
+           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+                dialogo++;
+                dialogoTraido = dialogosTuto(dialogo);
+                avanzarDialogo = true;
+                if (dialogo == 10) break;
+            }
+        }
+
+
+        window.draw(enlace);
+
+        window.display();
+    }
+
+    enlace.posicionar(250, 220);
 }
 
 

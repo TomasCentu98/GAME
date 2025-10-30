@@ -53,6 +53,7 @@ char* generarDialogo(int numero){
 
     if(numero==0)archivo = fopen("DialogosEnemigo.txt","rb");
     if(numero==1)archivo = fopen("DialogosHeroe.txt","rb");
+    if(numero==3)archivo = fopen("tutorial.txt", "rb");
 
     if(archivo==nullptr){
         exit(1);
@@ -70,6 +71,22 @@ char* generarDialogo(int numero){
         // limpia la linea de caracteres para que no haya sobrantes en la siguiente
         memset(dialogoEnArchivo, '\0', sizeof(dialogoEnArchivo));
     };
+
+    fclose(archivo);
+
+    return dialogoEnArchivo;
+}
+
+char* dialogosTuto(int dialogo){
+
+    FILE *archivo = fopen("tutorial.txt", "rb");
+
+    if(archivo==nullptr) exit(1);
+
+    const int TAM_BUFFER = 350;
+    char* dialogoEnArchivo = new char[TAM_BUFFER];
+
+    fread(dialogoEnArchivo, sizeof(dialogoEnArchivo) * dialogo, 1, archivo);
 
     fclose(archivo);
 

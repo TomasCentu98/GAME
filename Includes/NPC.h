@@ -21,8 +21,8 @@ class NPC : public sf::Drawable {
         void recibirGolpe(int);
         int calcularGolpe(int);
         /****/
-        void actualizar(MAPA&, int, int, sf::Clock);
-        void patrullar(int, int);
+        void actualizar(MAPA&, int, int, sf::Clock&);
+        void patrullar(int, int, sf::Clock &);
         sf::Vector2f getVelocidad();
         void setVelocidad(float, float);
         bool getDireccionMov();
@@ -40,6 +40,8 @@ class NPC : public sf::Drawable {
         int _vida;
         int _fuerza;
     private:
+        int _currentFrame;
+        float _frameTime = 0.1f;
         sf::Sprite _sprite;
         sf::Texture _textura;
         sf::Vector2f _velocidad;

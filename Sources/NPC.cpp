@@ -116,16 +116,12 @@ bool NPC::estaColisionando(sf::Vector2f areaObj) {
     return false;
 }
 
-void NPC::actualizar(MAPA &mapaActual, int width, int heigth, sf::Clock relojito) {
+void NPC::actualizar(MAPA &mapaActual, int width, int heigth, sf::Clock &relojito) {
     _velocidad = {0, 0};
 
     const int frameWidth = 32;
     const int frameHeight = 32;
-    int currentFrame = 0;
-
-    float frameTime = 0.15f;
-
-
+    int fila = 0;
 
     sf::Vector2 personajePos = {
         _sprite.getGlobalBounds().getCenter().x,
@@ -151,26 +147,21 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth, sf::Clock relojito
 
     // TECLAS DE MOVIMIENTO
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-       _velocidad.y = -1; // 800 - 576
+       _velocidad.y = -3;
+       fila = 3;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        _velocidad.x = -1;
+        _velocidad.x = -3;
+        fila = 1;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-       _velocidad.y = 1;
+       _velocidad.y = 3;
+       fila = 0;
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        _velocidad.x = 1;
+        _velocidad.x = 3;
+        fila = 2;
     }
-
-    // DIRECCION DE SPRITE AL CAMINAR
-    if (_velocidad.x < 0) {
-        _sprite.setScale({-1.f, 1.f});
-    } else if (_velocidad.x > 0) {
-        _sprite.setScale({1.f,1.f});
-    }
-
-
 
     const int azulejoSize = 32 ;
     const int cantAzulejosX = width / azulejoSize;
@@ -179,50 +170,53 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth, sf::Clock relojito
     int azulejoX = azulejoPos.x / azulejoSize;
     int azulejoY = azulejoPos.y  / azulejoSize;
 
+    if(_velocidad.x !=0 || _velocidad.y !=0){
+        if(relojito.getElapsedTime().asSeconds() >= _frameTime){
+            _currentFrame = (_currentFrame + 1) % 3;
+            relojito.restart();
+        }
+    } else {_currentFrame = 1;}
+
+    _sprite.setTextureRect({{frameWidth * _currentFrame, frameHeight * fila},{frameWidth, frameHeight}});
+
     // verificar si el azulejo destino es sólido por posicion
-    //                     x , y , cant -> 0 + 1 * 25 -> azulejos[25]
+    //                     x , y , cant -> 0 + 1 * 25 -> azulejos[25] = true
     if(mapaActual.esCaminable(azulejoX, azulejoY, cantAzulejosX))
     {
-        _sprite.move( _velocidad * relojito.restart().asSeconds()); // mover solo si no es sólido
+        _sprite.move(_velocidad); // mover solo si no es sólido
     }
-    static float ultimoFrame = 0;
-    ultimoFrame+=relojito.getElapsedTime().asSeconds();
-    if(_velocidad.x !=0 || _velocidad.y !=0){
-        if(ultimoFrame>=frameTime){
-            currentFrame = (currentFrame + 1) % 3;
-            ultimoFrame = 0.f;
-        }
-        else{
-            currentFrame = 1;
-        }
-    }
-
-    int direccion;
-
-    if(_velocidad.y<0) direccion = 3;
-    if(_velocidad.y>0) direccion = 0;
-    if(_velocidad.x<0) direccion = 1;
-    if(_velocidad.x>0) direccion = 2;
-
-    _sprite.setTextureRect({{frameWidth * currentFrame, frameHeight * direccion},{frameWidth, frameHeight}});
 }
 
-void NPC::patrullar(int posIzq, int posDer /*limite*/) {
+void NPC::patrullar(int posIzq, int posDer, sf::Clock &relojito) {
     int nuevaPosX;
     int posY = _sprite.getPosition().y;
+    const int frameWidth = 32;
+    const int frameHeight = 32;
 
-    if (getDireccionMov()) {
+    if (relojito.getElapsedTime().asSeconds() >= _frameTime)
+    {
+        _currentFrame = (_currentFrame + 1) % 3;
+        relojito.restart();
+    }
+    else {_currentFrame = 0;}
+
+    if (getDireccionMov())
+    {
         setVelocidad(2,0);
         nuevaPosX = _sprite.getPosition().x + getVelocidad().x;
-        if (_sprite.getPosition().x >= posDer) {
-            _sprite.setScale({-1.f, 1.f});
+        if (_sprite.getPosition().x >= posDer)
+        {
+            _sprite.setTextureRect({{frameWidth * _currentFrame, 32},{frameWidth, frameHeight}});
             setDirrecionMov(false);
         }
-    } else {
+    }
+    else
+    {
         setVelocidad(-2,0);
         nuevaPosX = _sprite.getPosition().x + getVelocidad().x;
-        if (_sprite.getPosition().x <= posIzq) {
-            _sprite.setScale({1.f, 1.f});
+        if (_sprite.getPosition().x <= posIzq)
+        {
+            _sprite.setTextureRect({{frameWidth * _currentFrame, 0},{frameWidth, frameHeight}});
             setDirrecionMov(true);
         }
     }

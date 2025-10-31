@@ -285,12 +285,14 @@ void PANTALLA::creditos(sf::RenderWindow &window) {
 
 void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
+    // MUSICA DE FONDO
     sf::Music MusicaPelea;
     MusicaPelea.openFromFile("Musica/Pelea.ogg");
     MusicaPelea.play();
     MusicaPelea.setLooping(true);
     MusicaPelea.setVolume(5);
 
+    // EFECTOS DE SONIDO
     sf::SoundBuffer ataqueEnlace;
     ataqueEnlace.loadFromFile("Efectos/Golpe.ogg");
     sf::Sound ataqueE(ataqueEnlace);
@@ -319,9 +321,8 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     enlace.setBatallando(true);
     enlace.posicionar(250.f, 250.f);
     rival.posicionar(450.f, 250.f);
-    rival.getSprite().setScale({-1.f, 1.f});
 
-    // LATA
+    // LATA DE HECHIZO
     sf::RectangleShape lata({40.f, 40.f});
     sf::Texture lataTexture("IMG/lata.png");
     lata.setTexture(&lataTexture);
@@ -359,14 +360,16 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
         // texto de la vida del enemigo
         std::string textVE = nombreEnemigo + ": \n" + std::to_string(rival.getVida()) + " | " + vidaMaxEneg;
-        mapita._vidaEnemigo.setString(textVE);
+        mapita.setVidaEnemigo(textVE);
 
         // texto de datos del jugador
-        std::string text1 = nombreHeroe + ": \n" + std::to_string(enlace.getVida())
+        std::string manacito = std::to_string(enlace.getMana());
+        if (enlace.getMana() <= 0) manacito = '0';
+
+        std::string textHeroe = nombreHeroe + ": \n" + std::to_string(enlace.getVida())
                             + " | " + vidaMaxH
-                            + "\n" + std::to_string(enlace.getMana()) + " | " + manaMax;
-        std::string textHeroe = text1 ;
-        mapita._vidaHeroe.setString(textHeroe);
+                            + "\n" + manacito + " | " + manaMax;
+        mapita.setVidaHeroe(textHeroe);
 
         // "IA" del enemigo
         const int decisionRival = (rand() % 2) + 1;
@@ -374,16 +377,16 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         window.clear(sf::Color::Black);
 
         // dibuja el fondo y la interfaz
-        for (auto cuadro : mapita.getRectangles())
+        for (int cuadro=0; cuadro < 8; cuadro++)
         {
-            window.draw(cuadro);
+            window.draw(mapita.getRectangles()[cuadro]);
         }
-            window.draw(mapita._vidaEnemigo);
-            window.draw(mapita._vidaHeroe);
-            window.draw(lata);
+            window.draw(mapita.getE());
+            window.draw(mapita.getH());
+            //window.draw(lata);
             window.draw(enlace);
             window.draw(rival);
-            window.draw(mapita._textoExplicativo);
+            window.draw(mapita.getTxt());
 
         window.display();
 
@@ -398,28 +401,28 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
                     if (mapita.getRectangles()[4].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
-                        mapita._textoExplicativo.setString(" PEGANDO ");
+                        mapita.setTexto(" PEGANDO ");
                         enlace.golpear(rival);
                         ataqueE.play();
                         turnoH = false;
                     }
                     if (mapita.getRectangles()[5].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
-                        mapita._textoExplicativo.setString(" DEFENDIENDO ");
+                        mapita.setTexto(" DEFENDIENDO ");
                         enlace.setDefensa(true);
                         defensaE.play();
                         turnoH = false;
                     }
                     if (mapita.getRectangles()[6].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
-                        mapita._textoExplicativo.setString(" CURANDO ");
+                        mapita.setTexto(" CURANDO ");
                         enlace.curar();
                         curacionE.play();
                         turnoH = false;
                     }
                     if (mapita.getRectangles()[7].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
-                        mapita._textoExplicativo.setString(" PIU PIU ");
+                        mapita.setTexto(" PIU PIU ");
                         enlace.hechizo(rival);
                         hechizoE.play();
                         turnoH = false;
@@ -430,8 +433,8 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
         if(!turnoH && !enter) {
             if (!turnoHecho) {
-                std::string text = mapita._textoExplicativo.getString() + '\n' + "Presione enter para terminar turno...";
-                mapita._textoExplicativo.setString(text);
+                std::string text = mapita.getTexto() + '\n' + "Presione enter para terminar turno...";
+                mapita.setTexto(text);
                 turnoHecho = true;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
@@ -443,13 +446,13 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
         if (turnoE && enter) {
             if (decisionRival == 1) {
-                mapita._textoExplicativo.setString(" ENEMIGO PEGANDO ");
+                mapita.setTexto(" ENEMIGO PEGANDO ");
                 rival.golpear(enlace);
                 ataqueG.play();
                 turnoE = false;
                 turnoH = true;
             } else {
-                mapita._textoExplicativo.setString(" ENEMIGO DEFENDIDO ");
+                mapita.setTexto(" ENEMIGO DEFENDIDO ");
                 rival.setDefensa(true);
                 turnoE = false;
                 turnoH = true;
@@ -459,7 +462,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         }
     }
 
-    cortinaFin(window);
+    cortinaInicio(window);
 
     enlace.setVida(100.f);
     enlace.setMana(100);
@@ -504,47 +507,30 @@ void PANTALLA::cortinaInicio(sf::RenderWindow &window) {
     }
 }
 
-void PANTALLA::cortinaFin(sf::RenderWindow &window) {
-
-    sf::RectangleShape cortina(sf::Vector2f({(float)_ANCHO,(float) _LARGO}));
-    cortina.setFillColor(sf::Color::White);
-    float duracion = 0.25;
-
-    sf::Clock relojito;
-
-    while (relojito.getElapsedTime().asSeconds() > duracion) {
-
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>()) window.close();
-        }
-
-        float transparencia = 255 - (relojito.getElapsedTime().asSeconds() / duracion) * 255;
-        float colorcito = 255 - (relojito.getElapsedTime().asSeconds() / duracion);
-        cortina.setFillColor(sf::Color(colorcito,colorcito,colorcito,transparencia));
-
-        window.clear();
-
-        window.draw(cortina);
-
-        window.display();
-    }
-}
-
 void PANTALLA::tutorial(sf::RenderWindow &window, HEROE &enlace, MAPA &mapa) {
 
+    sf::Font fuente("MAPAS/fuente.ttf");
+    sf::Texture texture("IMG/HUD_batalla.png");
+    int dialogo = 0;
 
+    // cuadro de texto que aparece
     sf::RectangleShape cuadroTexto({650.f , 100.f});
     cuadroTexto.setPosition({100.f , 350.f});
     cuadroTexto.setFillColor(sf::Color::Black);
     cuadroTexto.setOutlineThickness(1);
 
+    // muestra la interfaz de ataque para mostrarla de ejemplo
     sf::RectangleShape imgInterfaz({150.f, 200.f});
-    sf::Texture texture("IMG/HUD_batalla.png");
     imgInterfaz.setTexture(&texture);
     imgInterfaz.setPosition({350.f, 130.f});
 
+    sf::Text texto(fuente, "texto piola");
+    texto.setCharacterSize(16);
+    texto.setString(dialogosTuto(dialogo));
+    texto.setPosition({110.f, 360.f});
+    texto.setFillColor(sf::Color::White);
 
+    // para mostrar al vagabundo del tuto y su arbolito
     NPC vagabundo;
     vagabundo.setSprite("IMG/cirujano.png");
     vagabundo.setNombre("charly");
@@ -555,20 +541,12 @@ void PANTALLA::tutorial(sf::RenderWindow &window, HEROE &enlace, MAPA &mapa) {
     arbol.setTexture(&textArbol);
     arbol.setPosition({260.f, 150.f});
 
-    sf::Font fuente("MAPAS/fuente.ttf");
-    sf::Text texto(fuente, "texto piola");
-    texto.setCharacterSize(16);
-    int dialogo = 0;
-
-    texto.setString(dialogosTuto(dialogo));
-    texto.setPosition({110.f, 360.f});
-    texto.setFillColor(sf::Color::White);
-
-    bool verif = false;
-    bool avanzarDialogo = false;
+    // verificaciones para avanzar dialogo
+    bool avanzar = false;
+    bool botonApretado = false;
+    bool finDialogo = false;
 
     while(window.isOpen()) {
-
 
         while (const std::optional event = window.pollEvent())
         {
@@ -576,31 +554,45 @@ void PANTALLA::tutorial(sf::RenderWindow &window, HEROE &enlace, MAPA &mapa) {
         }
 
         window.clear();
-
         window.draw(mapa);
         window.draw(cuadroTexto);
-        window.draw(texto);
         window.draw(vagabundo);
         window.draw(arbol);
-        if (dialogo >= 3) window.draw(imgInterfaz);
+        window.draw(enlace);
 
+        if (dialogo >= 4 && dialogo <= 8) window.draw(imgInterfaz);
 
-        if (!verif) {
-           std::string txt = texto.getString() + '\n' + "Presione enter para terminar turno...";
+        if (!avanzar) {
+            if (!finDialogo) {
+                std::string txt = texto.getString() + '\n' + "Enter >>>";
+                texto.setString(txt);
+                finDialogo = true;
+            }
 
-           if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) && !avanzarDialogo) {
+            if (!botonApretado && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
                 dialogo++;
                 texto.setString(dialogosTuto(dialogo));
-                if (dialogo == 10) break;
+                botonApretado = true;
+                finDialogo = false;
             }
+
+            if (botonApretado && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+                botonApretado = false;
+            }
+
         }
 
+        // que corte en el ultimo dialogo
+        if (dialogo == 10) break;
 
-        window.draw(enlace);
+        window.draw(texto);
+
 
         window.display();
     }
 
+    // al finalizar los textos mueve un poco al PJ
+    // para no volver a empezar el bucle
     enlace.posicionar(250, 220);
 }
 

@@ -10,7 +10,7 @@ MAPA_PELEA::MAPA_PELEA() :
     _vidaHeroe(_fuentePelea)
 {}
 
-std::vector<sf::RectangleShape> MAPA_PELEA::getRectangles() {
+sf::RectangleShape* MAPA_PELEA::getRectangles() {
     return _cuadros;
 }
 
@@ -27,7 +27,7 @@ void MAPA_PELEA::iniciar() {
     sf::Color baseIntColor(20.f , 50.f , 20.f , 150.f);
 
     for (int i = 0; i < 8; ++i) {
-        _cuadros.push_back(sf::RectangleShape());
+        _cuadros[i] = sf::RectangleShape();
     }
     //FONDO
     _cuadros[0].setSize({800.f , 576.f});
@@ -62,6 +62,7 @@ void MAPA_PELEA::iniciar() {
     _cuadros[7].setFillColor(sf::Color::Transparent);
     _cuadros[7].setPosition({170.f , 485.f});
 
+    //TEXTO
     _textoExplicativo.setPosition({320.f , 370.f});
     _textoExplicativo.setCharacterSize(12);
 
@@ -72,4 +73,38 @@ void MAPA_PELEA::iniciar() {
     _vidaEnemigo.setString("asd");
     _vidaEnemigo.setCharacterSize(12);
     _vidaEnemigo.setPosition({500.f , 470.f});
+}
+
+std::string MAPA_PELEA::getTexto() {
+    return _textoExplicativo.getString();
+}
+
+void MAPA_PELEA::setTexto(std::string txt) {
+    _textoExplicativo.setString(txt);
+}
+
+std::string MAPA_PELEA::getVidaHeroe() {
+    return _vidaHeroe.getString();
+}
+
+void MAPA_PELEA::setVidaHeroe(std::string txt) {
+    _vidaHeroe.setString(txt);
+}
+
+std::string MAPA_PELEA::getVidaEnemigo() {
+    return _vidaEnemigo.getString();
+}
+
+void MAPA_PELEA::setVidaEnemigo(std::string txt) {
+    _vidaEnemigo.setString(txt);
+}
+
+sf::Text MAPA_PELEA::getTxt() {
+    return _textoExplicativo;
+}
+sf::Text MAPA_PELEA::getE() {
+    return _vidaEnemigo;
+}
+sf::Text MAPA_PELEA::getH() {
+    return _vidaHeroe;
 }

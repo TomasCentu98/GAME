@@ -8,7 +8,7 @@ public:
     // pantallas
     void gameLoop(HEROE &enlace, sf::RenderWindow &window);
     void creditos(sf::RenderWindow &window);
-    void menu(sf::RenderWindow &window);
+    void menu(sf::RenderWindow &window, HEROE &);
     void pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window);
     void cortinaInicio(sf::RenderWindow &window);
     void cortinaFin(sf::RenderWindow &window);
@@ -16,7 +16,8 @@ public:
     unsigned int getAncho();
     unsigned int getLargo();
     ~PANTALLA();
-
+    void gameOver(sf::RenderWindow &window, HEROE &enlace);
+    bool reset = false;
 private:
     const unsigned int _ANCHO = 800;
     const unsigned int _LARGO = 576;

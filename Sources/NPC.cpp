@@ -7,7 +7,7 @@ NPC::NPC() :
     _sprite(_textura)
 {
     _vida = 100;
-    _fuerza = 15;
+    _fuerza = 8;
 
     _sprite.setOrigin({
         _sprite.getTexture().getSize().x / 2.f,

@@ -57,7 +57,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     bool enemigosCreadosPan2 = false;
     bool enemigosCreadosPan3 = false;
 
-    while (window.isOpen()) {
+    while (window.isOpen() && enlace.vivo) {
 
         while (const std::optional event = window.pollEvent())
         {
@@ -120,7 +120,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
 
 
         window.clear(sf::Color::Black);
-
+        if(!enlace.vivo){
+            break;
+        }
         window.draw(mapa);
 
 
@@ -195,7 +197,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     }
 }
 
-void PANTALLA::menu(sf::RenderWindow &window) {
+void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
 
     sf::Texture tex("IMG/menu.png");
     sf::Sprite image(tex);
@@ -221,7 +223,20 @@ void PANTALLA::menu(sf::RenderWindow &window) {
         {
             if (event->is<sf::Event::Closed>()) window.close();
         }
+        window.clear();
+        if(reset==false){
+            window.draw(image);
+            window.draw(botonJugar);
+            window.draw(botonCreditos);
+            window.draw(botonSalir);
+                    }
 
+        if(reset==true && !enlace.vivo){
+                reset = false;
+                musicamenu.stop();
+                enlace.resetear();
+                gameLoop(enlace, window);
+        }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
         {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
@@ -229,12 +244,7 @@ void PANTALLA::menu(sf::RenderWindow &window) {
             if(botonJugar.getGlobalBounds().contains({(float) mousePos.x ,  (float) mousePos.y}))
             {
                 musicamenu.stop();
-                HEROE *enlace = new HEROE();
-                enlace->setSprite("IMG/Enlace.png");
-                enlace->setNombre("Enlace");
-                enlace->setDialogo("hola");
-                gameLoop(*enlace, window);
-                delete enlace;
+                gameLoop(enlace, window);
             }
             if(botonCreditos.getGlobalBounds().contains({(float) mousePos.x ,  (float) mousePos.y}))
                 creditos(window);
@@ -242,12 +252,6 @@ void PANTALLA::menu(sf::RenderWindow &window) {
                 exit(1);
         }
 
-        window.clear();
-
-        window.draw(image);
-            window.draw(botonJugar);
-            window.draw(botonCreditos);
-            window.draw(botonSalir);
 
         window.display();
     }
@@ -459,8 +463,18 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
             }
 
             enter = false;
+
+
         }
+
     }
+
+    if(enlace.getVida()<=0){
+            MusicaPelea.stop();
+            enlace.vivo = false;
+            gameOver(window, enlace);
+            return;
+        }
 
     cortinaInicio(window);
 
@@ -594,6 +608,36 @@ void PANTALLA::tutorial(sf::RenderWindow &window, HEROE &enlace, MAPA &mapa) {
     // al finalizar los textos mueve un poco al PJ
     // para no volver a empezar el bucle
     enlace.posicionar(250, 220);
+}
+
+void PANTALLA::gameOver(sf::RenderWindow &window, HEROE &enlace){
+
+    sf::Texture textura;
+    if(!textura.loadFromFile("IMG/gameover.png")){
+        return;
+    }
+    sf::Sprite gameoverpant(textura);
+
+    while(window.isOpen()){
+        while (const std::optional event = window.pollEvent())
+        {
+        if (event->is<sf::Event::Closed>()) window.close();
+        }
+
+        window.clear();
+        window.draw(gameoverpant);
+
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
+                reset=true;
+                break;
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)){
+            menu(window, enlace);
+        }
+        window.display();
+    }
+
+
 }
 
 

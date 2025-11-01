@@ -13,6 +13,8 @@ class HEROE : public NPC {
         void setMana(int);
         void setBatallando(bool);
         bool getBatallando();
+        bool vivo=true;
+        void resetear();
     private:
         bool _enBatalla;
         int _mana;

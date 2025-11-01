@@ -67,4 +67,13 @@ int HEROE::getMana(){
     return _mana;
 }
 
+void HEROE::resetear(){
+   _vida = 100;
+    _fuerza = 10;
+    _exp = 0;
+    _lvl = 1;
+    _mana = 70;
+    _enBatalla = false;
+    vivo = true;
+}
 

@@ -15,10 +15,17 @@ void app() {
     sf::Image img("IMG/GoblinFrente2.png");
     window.setIcon(img);
 
-    pantalla->menu(window);
+    HEROE *enlace = new HEROE();
+    enlace->setSprite("IMG/Enlace.png");
+    enlace->setNombre("Enlace");
+    enlace->setDialogo("hola");
+
+    pantalla->menu(window,*enlace);
 
     window.close();
+
     delete pantalla;
+    delete enlace;
 }
 
 // lee un .txt y copia la lista de numeros que tenga dentro

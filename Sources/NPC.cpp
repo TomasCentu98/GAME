@@ -128,23 +128,6 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth, sf::Clock &relojit
         _sprite.getGlobalBounds().getCenter().y
     };
 
-    // BORDE PANTALLA IZQUIERDA
-    if(personajePos.x < _sprite.getOrigin().x) {
-        _sprite.setPosition({_sprite.getOrigin().x, _sprite.getPosition().y});
-    }
-    // BORDE PANTALLA ARRIBA
-    if(personajePos.y < _sprite.getOrigin().y) {
-        _sprite.setPosition({_sprite.getPosition().x, _sprite.getOrigin().y});
-    }
-    // BORDE PANTALLA ABAJO
-    if(personajePos.y > heigth - _sprite.getOrigin().y) {
-        _sprite.setPosition({_sprite.getPosition().x , heigth - _sprite.getOrigin().y});
-    }
-    // BORDE PANTALLA DERECHA
-    if(personajePos.x > width - _sprite.getOrigin().x) {
-        _sprite.setPosition({width - _sprite.getOrigin().x , _sprite.getPosition().y});
-    }
-
     // TECLAS DE MOVIMIENTO
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
        _velocidad.y = -3;
@@ -175,7 +158,7 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth, sf::Clock &relojit
             _currentFrame = (_currentFrame + 1) % 3;
             relojito.restart();
         }
-    } else {_currentFrame = 1;}
+    }
 
     _sprite.setTextureRect({{frameWidth * _currentFrame, frameHeight * fila},{frameWidth, frameHeight}});
 
@@ -187,39 +170,36 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth, sf::Clock &relojit
     }
 }
 
-void NPC::patrullar(int posIzq, int posDer, sf::Clock &relojito) {
-    int nuevaPosX;
-    int posY = _sprite.getPosition().y;
+void NPC::patrullar(int posIzq, int posDer) {
+    float nuevaPosX;
+    float posY = _sprite.getPosition().y;
     const int frameWidth = 32;
     const int frameHeight = 32;
 
-    if (relojito.getElapsedTime().asSeconds() >= _frameTime)
+    if (_relojEnemigo.getElapsedTime().asSeconds() >= _frameTime)
     {
         _currentFrame = (_currentFrame + 1) % 3;
-        relojito.restart();
+        _relojEnemigo.restart();
     }
-    else {_currentFrame = 0;}
 
     if (getDireccionMov())
     {
         setVelocidad(2,0);
         nuevaPosX = _sprite.getPosition().x + getVelocidad().x;
-        if (_sprite.getPosition().x >= posDer)
-        {
-            _sprite.setTextureRect({{frameWidth * _currentFrame, 32},{frameWidth, frameHeight}});
-            setDirrecionMov(false);
-        }
+
+        if (_sprite.getPosition().x >= posDer) setDirrecionMov(false);
+
+        _sprite.setTextureRect({{frameWidth * _currentFrame, 0},{frameWidth, frameHeight}});
     }
     else
     {
         setVelocidad(-2,0);
         nuevaPosX = _sprite.getPosition().x + getVelocidad().x;
-        if (_sprite.getPosition().x <= posIzq)
-        {
-            _sprite.setTextureRect({{frameWidth * _currentFrame, 0},{frameWidth, frameHeight}});
-            setDirrecionMov(true);
-        }
+
+        if (_sprite.getPosition().x <= posIzq) setDirrecionMov(true);
+
+        _sprite.setTextureRect({{frameWidth * _currentFrame, 32},{frameWidth, frameHeight}});
     }
 
-    posicionar((float)nuevaPosX, (float)posY);
+    posicionar(nuevaPosX, posY);
 }

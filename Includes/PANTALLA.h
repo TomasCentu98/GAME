@@ -13,6 +13,7 @@ public:
     void cortinaInicio(sf::RenderWindow &window);
     void cortinaFin(sf::RenderWindow &window);
     void tutorial(sf::RenderWindow &, HEROE &, MAPA &);
+    void mostrarEstadisticas(sf::RenderWindow&, HEROE&, float);
     unsigned int getAncho();
     unsigned int getLargo();
     ~PANTALLA();

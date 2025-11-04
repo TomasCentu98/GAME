@@ -4,11 +4,11 @@ HEROE::HEROE() :
     _textura("IMG/GoblinFrente2.png"),
     _sprite(_textura)
 {
-    _vida = 100;
-    _fuerza = 10;
+    _vida = 150;
+    _fuerza = 15;
     _exp = 0;
     _lvl = 1;
-    _mana = 70;
+    _mana = 100;
     _enBatalla = false;
 
 }
@@ -47,7 +47,7 @@ void HEROE::victoria() {
 void HEROE::curar(){
     if(_mana >=20){
         if(_vida<100){
-            _vida+=15;
+            _vida+=20;
             if(_vida>100){
                 _vida=100;
             }
@@ -58,7 +58,7 @@ void HEROE::curar(){
 
 void HEROE::hechizo(NPC &rival){
     if(_mana >= 30){
-        rival.recibirGolpe(_fuerza*1.3);
+        rival.recibirGolpe(_fuerza*1.4);
     }
     _mana -=30;
 }
@@ -68,11 +68,11 @@ int HEROE::getMana(){
 }
 
 void HEROE::resetear(){
-   _vida = 100;
-    _fuerza = 10;
+   _vida = 150;
+    _fuerza = 15;
     _exp = 0;
     _lvl = 1;
-    _mana = 70;
+    _mana = 100;
     _enBatalla = false;
     vivo = true;
 }

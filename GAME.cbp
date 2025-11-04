@@ -47,6 +47,7 @@
 			<Add library="sfml-audio" />
 			<Add directory="SFML/lib" />
 		</Linker>
+		<Unit filename="Includes/ESTADISTICAS.h" />
 		<Unit filename="Includes/HEROE.h" />
 		<Unit filename="Includes/MANAGER.h" />
 		<Unit filename="Includes/MAPA.h" />
@@ -54,6 +55,7 @@
 		<Unit filename="Includes/NPC.h" />
 		<Unit filename="Includes/NPC_aux.h" />
 		<Unit filename="Includes/PANTALLA.h" />
+		<Unit filename="Sources/ESTADISTICAS.cpp" />
 		<Unit filename="Sources/HEROE.cpp" />
 		<Unit filename="Sources/MANAGER.cpp" />
 		<Unit filename="Sources/MAPA.cpp" />

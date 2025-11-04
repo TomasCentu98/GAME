@@ -1,8 +1,8 @@
 #include "MANAGER.h"
 #include "PANTALLA.h"
+#include "NPC_aux.h"
 #include <cstring>
 #include <stdio.h>
-#include <iostream>
 
 using namespace std;
 
@@ -103,3 +103,61 @@ char* dialogosTuto(int dialogo){
 
     return dialogoEnArchivo;
 }
+
+NPC leerEnemigo() {
+
+    FILE *archivo = fopen("enemigos.dat", "rb");
+    NPC enemigo;
+
+    if(archivo==nullptr) return enemigo;
+
+    NPC_aux enemigoAux;
+
+    int enemigoEnArchivo = (rand()%4);
+    fseek(archivo, sizeof(NPC_aux) * enemigoEnArchivo, SEEK_SET);
+
+    if (fread(&enemigoAux, sizeof(NPC_aux), 1, archivo)) {
+        enemigo.setNombre(enemigoAux.getNombre());
+        enemigo.setDialogo(enemigoAux.getDialogo());
+        enemigo.setSprite("IMG/goblin.png");
+        enemigo.setVida(enemigoAux.getVida());
+        enemigo.setFuerza(enemigoAux.getFuerza());
+    }
+
+    fclose(archivo);
+
+    return enemigo;
+}
+
+
+void guardarEstadisticas(ESTADISTICAS est) {
+    FILE* file = fopen("estadisticas.dat", "ab");
+
+    if (file == nullptr) exit(1);
+
+    fwrite(&est, sizeof(ESTADISTICAS), 1, file);
+
+    fclose(file);
+}
+
+ESTADISTICAS* leerEstadisticas() {
+
+    FILE* file = fopen("estadisticas.dat", "ab");
+    if (file == nullptr) return nullptr;
+
+    fseek(file, 0, SEEK_END);
+
+    int tamanoArchivo = ftell(file);
+
+    const int cantidadElementos = tamanoArchivo / sizeof(ESTADISTICAS);
+    ESTADISTICAS buffer[cantidadElementos];
+
+    for (int elemento=0; elemento < cantidadElementos; elemento++) {
+        fread(&buffer[elemento], sizeof(ESTADISTICAS), 1, file);
+    }
+
+    fclose(file);
+
+    return buffer;
+}
+

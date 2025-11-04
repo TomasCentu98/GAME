@@ -24,4 +24,5 @@ class HEROE : public NPC {
         sf::Sprite _sprite;
         sf::Texture _textura;
         sf::Vector2f _velocidad;
+        // para estadisticas
 };

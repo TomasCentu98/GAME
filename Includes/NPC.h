@@ -2,7 +2,7 @@
 #include "MAPA.h"
 #include <SFML/Graphics.hpp>
 
-/// CLASE BASE NPC
+// CLASE BASE NPC
 class NPC : public sf::Drawable {
     public:
         NPC();
@@ -21,8 +21,6 @@ class NPC : public sf::Drawable {
         void recibirGolpe(int);
         int calcularGolpe(int);
         /****/
-        void actualizar(MAPA&, int, int, sf::Clock&);
-        void patrullar(int, int, sf::Clock &);
         sf::Vector2f getVelocidad();
         void setVelocidad(float, float);
         bool getDireccionMov();
@@ -30,11 +28,14 @@ class NPC : public sf::Drawable {
         bool estaColisionando(sf::Vector2f);
         sf::Sprite getSprite();
         void setSprite(const char *);
+        /****/
         void posicionar(float, float);
         virtual void draw(sf::RenderTarget&, sf::RenderStates) const override;
+        void actualizar(MAPA&, int, int, sf::Clock&);
+        void patrullar(int, int);
+        int generarFuerza(int);
     protected:
         bool _estaDefendido = false;
-        int generarFuerza(int);
         char _dialogo[200] = {};
         char _nombre[50] = {};
         int _vida;
@@ -46,4 +47,5 @@ class NPC : public sf::Drawable {
         sf::Texture _textura;
         sf::Vector2f _velocidad;
         bool _moviendoDerecha = true;
+        sf::Clock _relojEnemigo;
 };

@@ -16,10 +16,8 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     MusicaJuego.setLooping(true);
     MusicaJuego.setVolume(3);
 
-    // MAPA
     MAPA mapa(_ANCHO, _LARGO);
     sf::Clock relojito;
-    sf::Clock relojitoEnemigo;
     enlace.posicionar(561 , 432);
 
     NPC vagabundo;
@@ -32,21 +30,13 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     arbol.setTexture(&textArbol);
     arbol.setPosition({260.f, 150.f});
 
-    NPC eneg1pan1;
-    eneg1pan1.setSprite("IMG/goblin.png");
-    eneg1pan1.setNombre("pepeASD");
+    NPC eneg1pan1 = leerEnemigo();
 
-    NPC eneg2pan1;
-    eneg2pan1.setSprite("IMG/goblin.png");
-    eneg2pan1.setNombre("pepeZXC");
+    NPC eneg2pan1 = leerEnemigo();
 
-    NPC eneg1pan2;
-    eneg1pan2.setSprite("IMG/goblin.png");
-    eneg1pan2.setNombre("pepeRWER");
+    NPC eneg1pan2 = leerEnemigo();
 
-    NPC eneg2pan2;
-    eneg2pan2.setSprite("IMG/goblin.png");
-    eneg2pan2.setNombre("pepeTRFS");
+    NPC eneg2pan2 = leerEnemigo();
 
     NPC jefe;
     jefe.setSprite("IMG/DragFrente2.png");
@@ -69,8 +59,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
 
         if (!enlace.getBatallando())
         {
+            // ENEMIGO 1 PANTALLA 1
             if (!enlace.estaColisionando(eneg1pan1.getSprite().getPosition()))
-                eneg1pan1.patrullar(300, 500, relojitoEnemigo);
+                eneg1pan1.patrullar(300, 500);
 
             if (enlace.estaColisionando(eneg1pan1.getSprite().getPosition()))
             {
@@ -80,8 +71,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
                 MusicaJuego.play();
             }
 
+            // ENEMIGO 2 PANTALLA 1
             if (!enlace.estaColisionando(eneg2pan1.getSprite().getPosition()))
-                eneg2pan1.patrullar(250, 500, relojitoEnemigo);
+                eneg2pan1.patrullar(250, 500);
 
             if (enlace.estaColisionando(eneg2pan1.getSprite().getPosition()))
             {
@@ -91,8 +83,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
                 MusicaJuego.play();
             }
 
+            // ENEMIGO 1 PANTALLA 2
             if (!enlace.estaColisionando(eneg1pan2.getSprite().getPosition()))
-                eneg1pan2.patrullar(250, 600, relojitoEnemigo);
+                eneg1pan2.patrullar(250, 600);
 
             if (enlace.estaColisionando(eneg1pan2.getSprite().getPosition()))
             {
@@ -102,8 +95,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
                 MusicaJuego.play();
             }
 
+            // ENEMIGO 2 PANTALLA 2
             if (!enlace.estaColisionando(eneg2pan2.getSprite().getPosition()))
-                eneg2pan2.patrullar(250, 700, relojitoEnemigo);
+                eneg2pan2.patrullar(250, 700);
 
             if (enlace.estaColisionando(eneg2pan2.getSprite().getPosition()))
             {
@@ -112,20 +106,21 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
                 pelea(eneg2pan2, enlace, window);
                 MusicaJuego.play();
             }
+
+            // JEFE PANTALLA 3
         }
 
         // CONTROLA EL PASO DE MAPAS
         mapa.chequeoPasoDeMapa(enlace);
 
-
-
         window.clear(sf::Color::Black);
-        if(!enlace.vivo){
-            break;
-        }
+
+        // si moriste, termina el juego
+        if(!enlace.vivo) break;
+
         window.draw(mapa);
 
-
+        // tutorial, si te vas del mapa, se cierra
         if (tuto) {
             window.draw(vagabundo);
             window.draw(arbol);
@@ -147,7 +142,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             eneg2pan2.posicionar(-32,-32);
             eneg1pan1.posicionar(255, 432);
             eneg2pan1.posicionar(465 , 114);
-            //
+            // validaciones para mover sprites
             enemigosCreadosPan1 = true;
             enemigosCreadosPan2 = false;
             enemigosCreadosPan3 = false;
@@ -159,7 +154,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             eneg2pan2.posicionar(465 , 150);
             eneg1pan1.posicionar(-32,-32);
             eneg2pan1.posicionar(-32,-32);
-            //
+            // validaciones para mover sprites
             enemigosCreadosPan1 = false;
             enemigosCreadosPan2 = true;
             enemigosCreadosPan3 = false;
@@ -171,16 +166,18 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             eneg2pan2.posicionar(-32,-32);
             eneg1pan1.posicionar(-32,-32);
             eneg2pan1.posicionar(-32,-32);
-            //
+            // validaciones para mover sprites
             enemigosCreadosPan1 = false;
             enemigosCreadosPan2 = false;
             enemigosCreadosPan3 = true;
         }
 
+        // si los enemigos estan muertos, se van fuera de camara
         if (eneg1pan1.getVida() <= 0) eneg1pan1.posicionar(-32,-32);
         if (eneg2pan1.getVida() <= 0) eneg2pan1.posicionar(-32,-32);
         if (eneg1pan2.getVida() <= 0) eneg1pan2.posicionar(-32,-32);
         if (eneg2pan2.getVida() <= 0) eneg2pan2.posicionar(-32,-32);
+
 
         if(mapa.getMapaActual() != 0)
         {
@@ -216,6 +213,12 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
     sf::RectangleShape botonSalir( {160.f , 40.f} );
         botonSalir.setFillColor(sf::Color::Transparent);
         botonSalir.setPosition( {350.f , 505.f} );
+    sf::RectangleShape estadisticas( {80.f , 100.f} );
+        sf::Texture texturaEstadisticas("IMG/estadisticas.png");
+        estadisticas.setTexture(&texturaEstadisticas);
+        estadisticas.setPosition( {50.f , 450.f} );
+
+    sf::Clock tiempoDeJuego;
 
     while (window.isOpen())
     {
@@ -223,35 +226,45 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
         {
             if (event->is<sf::Event::Closed>()) window.close();
         }
+
         window.clear();
+
         if(reset==false){
             window.draw(image);
             window.draw(botonJugar);
             window.draw(botonCreditos);
             window.draw(botonSalir);
-                    }
+            window.draw(estadisticas);
+        }
 
         if(reset==true && !enlace.vivo){
                 reset = false;
                 musicamenu.stop();
                 enlace.resetear();
+                tiempoDeJuego.restart();
                 gameLoop(enlace, window);
         }
+
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
         {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
 
-            if(botonJugar.getGlobalBounds().contains({(float) mousePos.x ,  (float) mousePos.y}))
+            if(botonJugar.getGlobalBounds().contains(worldPos))
             {
                 musicamenu.stop();
+                tiempoDeJuego.restart();
                 gameLoop(enlace, window);
             }
-            if(botonCreditos.getGlobalBounds().contains({(float) mousePos.x ,  (float) mousePos.y}))
+            if(botonCreditos.getGlobalBounds().contains(worldPos))
                 creditos(window);
-            if(botonSalir.getGlobalBounds().contains({(float) mousePos.x ,  (float) mousePos.y}))
+            if(botonSalir.getGlobalBounds().contains(worldPos))
                 exit(1);
-        }
 
+            if(estadisticas.getGlobalBounds().contains(worldPos)) {
+                mostrarEstadisticas(window, enlace, tiempoDeJuego.restart().asSeconds());
+            }
+        }
 
         window.display();
     }
@@ -463,8 +476,6 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
             }
 
             enter = false;
-
-
         }
 
     }
@@ -472,6 +483,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     if(enlace.getVida()<=0){
             MusicaPelea.stop();
             enlace.vivo = false;
+            cortinaInicio(window);
             gameOver(window, enlace);
             return;
         }
@@ -613,12 +625,21 @@ void PANTALLA::tutorial(sf::RenderWindow &window, HEROE &enlace, MAPA &mapa) {
 void PANTALLA::gameOver(sf::RenderWindow &window, HEROE &enlace){
 
     sf::Texture textura;
-    if(!textura.loadFromFile("IMG/gameover.png")){
-        return;
-    }
+    if(!textura.loadFromFile("IMG/gameover.png")) return;
     sf::Sprite gameoverpant(textura);
 
+    sf::RectangleShape botonContinuar;
+    botonContinuar.setSize({240 , 80});
+    botonContinuar.setFillColor(sf::Color::Transparent);
+    botonContinuar.setPosition({305 , 345});
+
+    sf::RectangleShape botonSalir;
+    botonSalir.setSize({240 , 60});
+    botonSalir.setFillColor(sf::Color::Transparent);
+    botonSalir.setPosition({305 , 445});
+
     while(window.isOpen()){
+
         while (const std::optional event = window.pollEvent())
         {
         if (event->is<sf::Event::Closed>()) window.close();
@@ -626,19 +647,59 @@ void PANTALLA::gameOver(sf::RenderWindow &window, HEROE &enlace){
 
         window.clear();
         window.draw(gameoverpant);
+        window.draw(botonContinuar);
+        window.draw(botonSalir);
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
-                reset=true;
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+
+            sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+            sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
+
+            if(botonContinuar.getGlobalBounds().contains(worldPos)) {
+                reset = true;
                 break;
+            }
+
+            if(botonSalir.getGlobalBounds().contains(worldPos)) {
+                menu(window, enlace);
+            }
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)){
-            menu(window, enlace);
-        }
+
         window.display();
     }
-
-
 }
 
+void PANTALLA::mostrarEstadisticas(sf::RenderWindow &window, HEROE &enlace, float tiempoDeJuego) {
+
+    sf::RectangleShape fondo({800 , 576});
+    sf::Texture textura("IMG/fondoEstadisticas.png");
+    fondo.setTexture(&textura);
+
+
+    sf::Font fuente("MAPAS/fuentePelea.ttf");
+    sf::Text texto(fuente, "Presione ESC para volver...");
+    texto.setPosition({200.f , 500.f});
+    texto.setCharacterSize(24);
+
+    while (window.isOpen())
+    {
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) window.close();
+        }
+
+        if (!window.isOpen()) break;
+
+        window.clear();
+
+        window.draw(fondo);
+        window.draw(texto);
+
+        window.display();
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) break;
+    }
+
+}
 
 PANTALLA::~PANTALLA() {}

@@ -5,9 +5,7 @@ class ESTADISTICAS {
 public:
     ESTADISTICAS();
 
-    int generarPuntaje();
-    void guardarEstadisticas();
-    char* leerEstadisticas();
+    void generarPuntaje();
 
     void setM(int);
     void setDR(int);
@@ -24,7 +22,9 @@ public:
     int getVID();
     int getT();
     char* getNombre();
-    char* getTotal();
+    int getTotal();
+
+    ~ESTADISTICAS();
 
 private:
     int _manaUtilizado;
@@ -33,6 +33,6 @@ private:
     int _danioHecho;
     int _vecesDefendido;
     int _vecesCurado;
-    char* _nombre;
-    char* _total;
+    char _nombre[50];
+    int _total;
 };

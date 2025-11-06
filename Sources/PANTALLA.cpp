@@ -3,6 +3,7 @@
 #include "MAPA_PELEA.h"
 #include "PANTALLA.h"
 #include "MANAGER.h"
+#include "NPC_aux.h"
 #include <SFML/Audio.hpp>
 #include <cstring>
 
@@ -38,9 +39,21 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
 
     NPC eneg2pan2 = leerEnemigo();
 
+    FILE *archivo = fopen("enemigos.dat", "rb");
+    if(archivo==nullptr) return;
+
     NPC jefe;
-    jefe.setSprite("IMG/DragFrente2.png");
-    jefe.setNombre("pepeCAQSD");
+    NPC_aux jefeAux;
+
+    if (fread(&jefeAux, sizeof(NPC_aux), 1, archivo)) {
+        jefe.setNombre(jefeAux.getNombre());
+        jefe.setDialogo(jefeAux.getDialogo());
+        jefe.setVida(jefeAux.getVida());
+        jefe.setFuerza(jefeAux.getFuerza());
+        jefe.setSprite("IMG/DragFrente2.png");
+    }
+
+    fclose(archivo);
 
     bool tuto = true;
     bool enemigosCreadosPan1 = false;
@@ -108,6 +121,12 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             }
 
             // JEFE PANTALLA 3
+            if (enlace.estaColisionando(jefe.getSprite().getPosition()))
+            {
+                if(jefe.getVida() > 0) cortinaInicio(window);
+                MusicaJuego.stop();
+                pelea(jefe, enlace, window);
+            }
         }
 
         // CONTROLA EL PASO DE MAPAS
@@ -189,6 +208,9 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
             if (jefe.getVida() > 0) window.draw(jefe);
         }
 
+        if (jefe.getVida() < 0) enlace.juegoFinalizado = true;
+
+        if (enlace.juegoFinalizado) break;
 
         window.display();
     }
@@ -207,16 +229,26 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
     sf::RectangleShape botonJugar( {160.f , 40.f} );
         botonJugar.setFillColor(sf::Color::Transparent);
         botonJugar.setPosition( {350.f , 410.f} );
+
     sf::RectangleShape botonCreditos( {160.f , 40.f} );
         botonCreditos.setFillColor(sf::Color::Transparent);
         botonCreditos.setPosition( {350.f , 459.f} );
+
     sf::RectangleShape botonSalir( {160.f , 40.f} );
         botonSalir.setFillColor(sf::Color::Transparent);
         botonSalir.setPosition( {350.f , 505.f} );
+
     sf::RectangleShape estadisticas( {80.f , 100.f} );
         sf::Texture texturaEstadisticas("IMG/estadisticas.png");
         estadisticas.setTexture(&texturaEstadisticas);
         estadisticas.setPosition( {50.f , 450.f} );
+
+    sf::Font fuenteEstadisticas("MAPAS/fuentePelea.ttf");
+    sf::Text textoEstadisticas(fuenteEstadisticas);
+        textoEstadisticas.setString("Estadisticas");
+        textoEstadisticas.setCharacterSize(12);
+        textoEstadisticas.setFillColor(sf::Color::White);
+        textoEstadisticas.setPosition( {45.f , 430.f} );
 
     sf::Clock tiempoDeJuego;
 
@@ -238,11 +270,32 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
         }
 
         if(reset==true && !enlace.vivo){
-                reset = false;
-                musicamenu.stop();
-                enlace.resetear();
-                tiempoDeJuego.restart();
-                gameLoop(enlace, window);
+            reset = false;
+            musicamenu.stop();
+            enlace.resetear();
+            tiempoDeJuego.restart();
+            gameLoop(enlace, window);
+        }
+
+        if (enlace.juegoFinalizado) {
+            ESTADISTICAS est;
+            est.setM(enlace.getM());
+            est.setDR(enlace.getDR());
+            est.setD(enlace.getD());
+            est.setDEF(enlace.getDEF());
+            est.setVID(enlace.getVID());
+            est.setT(tiempoDeJuego.restart().asSeconds());
+
+            est.generarPuntaje();
+
+            est.setNombre(enlace.getNombre());
+
+            guardarEstadisticas(est);
+            enlace.juegoFinalizado = false;
+        }
+
+        if (estadisticas.getGlobalBounds().contains({(float)sf::Mouse::getPosition(window).x , (float)sf::Mouse::getPosition(window).y})) {
+            window.draw(textoEstadisticas);
         }
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
@@ -253,6 +306,7 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
             if(botonJugar.getGlobalBounds().contains(worldPos))
             {
                 musicamenu.stop();
+                pedirNombre(window, enlace);
                 tiempoDeJuego.restart();
                 gameLoop(enlace, window);
             }
@@ -420,28 +474,32 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                     {
                         mapita.setTexto(" PEGANDO ");
                         enlace.golpear(rival);
-                        ataqueE.play();
+                        ataqueE.play(); // sonido ataque
                         turnoH = false;
                     }
                     if (mapita.getRectangles()[5].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita.setTexto(" DEFENDIENDO ");
                         enlace.setDefensa(true);
-                        defensaE.play();
+                        enlace.setDEF(1);
+                        defensaE.play(); // sonido defenza
                         turnoH = false;
                     }
                     if (mapita.getRectangles()[6].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita.setTexto(" CURANDO ");
                         enlace.curar();
-                        curacionE.play();
+                        enlace.setVID(1);
+                        enlace.setM(20);
+                        curacionE.play(); // sonido curacion
                         turnoH = false;
                     }
                     if (mapita.getRectangles()[7].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita.setTexto(" PIU PIU ");
                         enlace.hechizo(rival);
-                        hechizoE.play();
+                        enlace.setM(30);
+                        hechizoE.play(); // sonido hechizo
                         turnoH = false;
                     }
                 } else {botonApretado = false;}
@@ -465,7 +523,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
             if (decisionRival == 1) {
                 mapita.setTexto(" ENEMIGO PEGANDO ");
                 rival.golpear(enlace);
-                ataqueG.play();
+                ataqueG.play(); // sonido ataque
                 turnoE = false;
                 turnoH = true;
             } else {
@@ -480,18 +538,19 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
     }
 
-    if(enlace.getVida()<=0){
+    if (enlace.getVida()<=0){
             MusicaPelea.stop();
             enlace.vivo = false;
             cortinaInicio(window);
             gameOver(window, enlace);
             return;
-        }
+    }
 
     cortinaInicio(window);
 
     enlace.setVida(100.f);
     enlace.setMana(100);
+    enlace.victoria();
     enlace.setBatallando(false);
     enlace.posicionar(posEnlace.x, posEnlace.y);
     rival.posicionar(posR.x, posR.y);
@@ -675,11 +734,33 @@ void PANTALLA::mostrarEstadisticas(sf::RenderWindow &window, HEROE &enlace, floa
     sf::Texture textura("IMG/fondoEstadisticas.png");
     fondo.setTexture(&textura);
 
-
     sf::Font fuente("MAPAS/fuentePelea.ttf");
     sf::Text texto(fuente, "Presione ESC para volver...");
     texto.setPosition({200.f , 500.f});
     texto.setCharacterSize(24);
+
+    FILE* file = fopen("estadisticas.dat", "rb");
+    if (file == nullptr) return;
+
+    fseek(file, 0, SEEK_END); // al final
+    int tamanoArchivo = ftell(file);
+    fseek(file, 0, SEEK_SET); // al principio
+
+    const int cantidadElementos = tamanoArchivo / sizeof(ESTADISTICAS);
+    ESTADISTICAS buffer[cantidadElementos];
+
+    sf::Text** textosEstadisticas = new sf::Text*[cantidadElementos];
+
+    for (int elemento=0; elemento < cantidadElementos; elemento++) {
+        fread(&buffer[elemento], sizeof(ESTADISTICAS), 1, file);
+        std::string txt = buffer[elemento].getNombre();
+        std::string txt2 = "   //    " + std::to_string(buffer[elemento].getTotal()) + "pts.";
+        textosEstadisticas[elemento] = new sf::Text(fuente, txt + txt2);
+        textosEstadisticas[elemento]->setFillColor(sf::Color::White);
+        textosEstadisticas[elemento]->setPosition( {200.f , 200.f + 25 * elemento} );
+    }
+
+    fclose(file);
 
     while (window.isOpen())
     {
@@ -688,11 +769,13 @@ void PANTALLA::mostrarEstadisticas(sf::RenderWindow &window, HEROE &enlace, floa
             if (event->is<sf::Event::Closed>()) window.close();
         }
 
-        if (!window.isOpen()) break;
-
         window.clear();
-
         window.draw(fondo);
+
+        for (int elemento=0; elemento < cantidadElementos; elemento++) {
+            window.draw(*textosEstadisticas[elemento]);
+        }
+
         window.draw(texto);
 
         window.display();
@@ -700,6 +783,66 @@ void PANTALLA::mostrarEstadisticas(sf::RenderWindow &window, HEROE &enlace, floa
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) break;
     }
 
+    for (int i = 0; i < cantidadElementos; ++i) {
+        delete textosEstadisticas[i];
+    }
+
+    delete[] textosEstadisticas;
+}
+
+void PANTALLA::pedirNombre(sf::RenderWindow &window, HEROE &enlace) {
+
+    sf::Font fuente("MAPAS/fuentePelea.ttf");
+    sf::Text texto(fuente, "Ingrese nombre heroico");
+    texto.setPosition({250.f , 200.f});
+
+    sf::Text enter(fuente, "Enter para finalizar...", 24);
+    enter.setPosition({250.f , 500.f});
+
+    sf::Texture textura("IMG/fondoPelea.png");
+    sf::RectangleShape fondo( {800.f , 576.f});
+    fondo.setTexture(&textura);
+
+    std::string buffer = "";
+    bool escribiendo = false;
+
+    while (window.isOpen())
+    {
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) window.close();
+
+            if (const auto* textEntered = event->getIf<sf::Event::TextEntered>())
+            {
+                if (textEntered->unicode < 128) {
+                    escribiendo = true;
+                    buffer += (char)textEntered->unicode;
+                }
+            }
+        }
+
+        window.clear();
+        window.draw(fondo);
+        window.draw(texto);
+        window.draw(enter);
+
+        if(escribiendo) texto.setString(buffer);
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+            enlace.setNombre(buffer.c_str());
+            break;
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Backspace)) {
+            if (!buffer.empty()) buffer.pop_back();
+            if (buffer.empty()) {
+                texto.setString("Ingrese nombre heroico");
+                escribiendo = false;
+            }
+        }
+
+        window.display();
+    }
 }
 
 PANTALLA::~PANTALLA() {}

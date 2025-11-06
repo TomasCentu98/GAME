@@ -26,7 +26,9 @@ void HEROE::setBatallando(bool estaPeleando) {
 }
 
 void HEROE::golpear(NPC &obj) {
-    obj.recibirGolpe(calcularGolpe(_fuerza));
+    int golpe = calcularGolpe(_fuerza);
+    obj.recibirGolpe(golpe);
+    _D += golpe;
 }
 
 void HEROE::recibirGolpe(float cantGolpe) {
@@ -40,7 +42,7 @@ void HEROE::victoria() {
         _exp = 0;
         _lvl++;
         _fuerza += 3;
-        _vida += 10;
+        _vida += 15;
     }
 }
 
@@ -75,5 +77,18 @@ void HEROE::resetear(){
     _mana = 100;
     _enBatalla = false;
     vivo = true;
+    juegoFinalizado = false;
 }
 
+// para estadisticas
+void HEROE::setM(int manaUtilizado) {_M += manaUtilizado;}
+void HEROE::setDR(int danioRecibido) {_DR += danioRecibido;}
+void HEROE::setD(int daniohecho) {_D = daniohecho;}
+void HEROE::setDEF(int vecesDefendido) {_DEF += vecesDefendido;}
+void HEROE::setVID(int vecesCurado) {_VID += vecesCurado;}
+
+int HEROE::getM() {return _M;}
+int HEROE::getDR() {return _DR;}
+int HEROE::getD() {return _D;}
+int HEROE::getDEF() {return _DEF;}
+int HEROE::getVID() {return _VID;}

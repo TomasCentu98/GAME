@@ -14,7 +14,19 @@ class HEROE : public NPC {
         void setBatallando(bool);
         bool getBatallando();
         bool vivo=true;
+        bool juegoFinalizado=false;
         void resetear();
+        // para estadisticas
+        void setM(int);
+        void setDR(int);
+        void setD(int);
+        void setDEF(int);
+        void setVID(int);
+        int getM();
+        int getDR();
+        int getD();
+        int getDEF();
+        int getVID();
     private:
         bool _enBatalla;
         int _mana;
@@ -25,4 +37,9 @@ class HEROE : public NPC {
         sf::Texture _textura;
         sf::Vector2f _velocidad;
         // para estadisticas
+        int _M = 0;
+        int _DR = 0;
+        int _D = 0;
+        int _DEF = 0;
+        int _VID = 0;
 };

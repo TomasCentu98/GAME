@@ -9,4 +9,3 @@ char* generarDialogo(int numero);
 char* dialogosTuto(int numero);
 NPC leerEnemigo();
 void guardarEstadisticas(ESTADISTICAS est);
-ESTADISTICAS* leerEstadisticas();

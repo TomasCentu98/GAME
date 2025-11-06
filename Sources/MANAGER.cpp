@@ -140,24 +140,3 @@ void guardarEstadisticas(ESTADISTICAS est) {
     fclose(file);
 }
 
-ESTADISTICAS* leerEstadisticas() {
-
-    FILE* file = fopen("estadisticas.dat", "ab");
-    if (file == nullptr) return nullptr;
-
-    fseek(file, 0, SEEK_END);
-
-    int tamanoArchivo = ftell(file);
-
-    const int cantidadElementos = tamanoArchivo / sizeof(ESTADISTICAS);
-    ESTADISTICAS buffer[cantidadElementos];
-
-    for (int elemento=0; elemento < cantidadElementos; elemento++) {
-        fread(&buffer[elemento], sizeof(ESTADISTICAS), 1, file);
-    }
-
-    fclose(file);
-
-    return buffer;
-}
-

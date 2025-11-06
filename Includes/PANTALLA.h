@@ -14,6 +14,7 @@ public:
     void cortinaFin(sf::RenderWindow &window);
     void tutorial(sf::RenderWindow &, HEROE &, MAPA &);
     void mostrarEstadisticas(sf::RenderWindow&, HEROE&, float);
+    void pedirNombre(sf::RenderWindow &, HEROE &);
     unsigned int getAncho();
     unsigned int getLargo();
     ~PANTALLA();

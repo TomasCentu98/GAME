@@ -58,7 +58,9 @@ int NPC::calcularGolpe(int fuerza) {
 }
 
 void NPC::golpear(HEROE &heroe) {
-    heroe.recibirGolpe(calcularGolpe(_fuerza));
+    int golpe = calcularGolpe(_fuerza);
+    heroe.recibirGolpe(golpe);
+    heroe.setDR(golpe);
 }
 
 int NPC::defensa() {

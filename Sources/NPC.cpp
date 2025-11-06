@@ -130,6 +130,23 @@ void NPC::actualizar(MAPA &mapaActual, int width, int heigth, sf::Clock &relojit
         _sprite.getGlobalBounds().getCenter().y
     };
 
+    // BORDE PANTALLA IZQUIERDA
+    if(personajePos.x < _sprite.getOrigin().x) {
+        _sprite.setPosition({_sprite.getOrigin().x, _sprite.getPosition().y});
+    }
+    // BORDE PANTALLA ARRIBA
+    if(personajePos.y < _sprite.getOrigin().y) {
+        _sprite.setPosition({_sprite.getPosition().x, _sprite.getOrigin().y});
+    }
+    // BORDE PANTALLA ABAJO
+    if(personajePos.y > heigth - _sprite.getOrigin().y) {
+        _sprite.setPosition({_sprite.getPosition().x , heigth - _sprite.getOrigin().y});
+    }
+    // BORDE PANTALLA DERECHA
+    if(personajePos.x > width - _sprite.getOrigin().x) {
+        _sprite.setPosition({width - _sprite.getOrigin().x , _sprite.getPosition().y});
+    }
+
     // TECLAS DE MOVIMIENTO
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
        _velocidad.y = -3;

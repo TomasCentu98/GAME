@@ -386,7 +386,9 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
     // toma las posiciones para devolverlos al terminar
     const sf::Vector2f posEnlace = enlace.getSprite().getPosition();
+    enlace.setSprite("IMG/EnlaceIdleBatalla.png");
     const sf::Vector2f posR = rival.getSprite().getPosition();
+    rival.setSprite("IMG/GoblinIdle.png");
 
     // posiciona las entidades al centro de pantalla
     enlace.setBatallando(true);
@@ -543,6 +545,8 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
             enlace.vivo = false;
             cortinaInicio(window);
             gameOver(window, enlace);
+            enlace.setSprite("IMG/Enlace.png");
+            rival.setSprite("IMG/Goblin.png");
             return;
     }
 
@@ -553,7 +557,9 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     enlace.victoria();
     enlace.setBatallando(false);
     enlace.posicionar(posEnlace.x, posEnlace.y);
+    enlace.setSprite("IMG/Enlace.png");
     rival.posicionar(posR.x, posR.y);
+    rival.setSprite("IMG/Goblin.png");
     MusicaPelea.stop();
 }
 
@@ -687,6 +693,10 @@ void PANTALLA::gameOver(sf::RenderWindow &window, HEROE &enlace){
     if(!textura.loadFromFile("IMG/gameover.png")) return;
     sf::Sprite gameoverpant(textura);
 
+    sf::SoundBuffer *musiquitaGO = new sf::SoundBuffer("Musica/GameOver.ogg");
+    sf::Sound GameOverMusica (*musiquitaGO);
+    GameOverMusica.play();
+
     sf::RectangleShape botonContinuar;
     botonContinuar.setSize({240 , 80});
     botonContinuar.setFillColor(sf::Color::Transparent);
@@ -726,6 +736,7 @@ void PANTALLA::gameOver(sf::RenderWindow &window, HEROE &enlace){
 
         window.display();
     }
+    delete musiquitaGO;
 }
 
 void PANTALLA::mostrarEstadisticas(sf::RenderWindow &window, HEROE &enlace, float tiempoDeJuego) {
@@ -747,7 +758,7 @@ void PANTALLA::mostrarEstadisticas(sf::RenderWindow &window, HEROE &enlace, floa
     fseek(file, 0, SEEK_SET); // al principio
 
     const int cantidadElementos = tamanoArchivo / sizeof(ESTADISTICAS);
-    ESTADISTICAS buffer[cantidadElementos];
+    ESTADISTICAS *buffer = new ESTADISTICAS[cantidadElementos];
 
     sf::Text** textosEstadisticas = new sf::Text*[cantidadElementos];
 
@@ -786,7 +797,7 @@ void PANTALLA::mostrarEstadisticas(sf::RenderWindow &window, HEROE &enlace, floa
     for (int i = 0; i < cantidadElementos; ++i) {
         delete textosEstadisticas[i];
     }
-
+    delete[] buffer;
     delete[] textosEstadisticas;
 }
 

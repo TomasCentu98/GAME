@@ -222,3 +222,18 @@ void NPC::patrullar(int posIzq, int posDer) {
 
     posicionar(nuevaPosX, posY);
 }
+
+void NPC::animacionIdle(){
+
+    _textura.loadFromFile("IMG/GoblinPelea.png");
+    _sprite.setTexture(_textura);
+
+    if(relojAnimacion.getElapsedTime().asSeconds()>tiempoAnimacion){
+      _sprite.setTextureRect({{64,0},{32,32}});
+    }
+
+    if(relojAnimacion.getElapsedTime().asSeconds()>tiempoAnimacion*2){
+      _sprite.setTextureRect({{96,0},{32,32}});
+      relojAnimacion.restart();
+    }
+};

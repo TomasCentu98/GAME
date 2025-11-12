@@ -79,6 +79,19 @@ void HEROE::resetear(){
     vivo = true;
     juegoFinalizado = false;
 }
+void HEROE::idlePelea(){
+
+    _textura.loadFromFile("IMG/EnlaceIdle.png");
+    _sprite.setTexture(_textura);
+
+    if(relojHeroe.getElapsedTime().asSeconds()>tiempoHeroe){
+        _sprite.setTextureRect({{32,0},{32,32}});
+    }
+    if(relojHeroe.getElapsedTime().asSeconds()>tiempoHeroe*2){
+        _sprite.setTextureRect({{0,0},{32,32}});
+        relojHeroe.restart();
+    }
+};
 
 // para estadisticas
 void HEROE::setM(int manaUtilizado) {_M += manaUtilizado;}

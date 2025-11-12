@@ -34,6 +34,7 @@ class NPC : public sf::Drawable {
         void actualizar(MAPA&, int, int, sf::Clock&);
         void patrullar(int, int);
         int generarFuerza(int);
+        void animacionIdle();
     protected:
         bool _estaDefendido = false;
         char _dialogo[200] = {};
@@ -48,4 +49,6 @@ class NPC : public sf::Drawable {
         sf::Vector2f _velocidad;
         bool _moviendoDerecha = true;
         sf::Clock _relojEnemigo;
+        sf::Clock relojAnimacion;
+        float tiempoAnimacion=1;
 };

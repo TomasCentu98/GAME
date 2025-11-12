@@ -431,6 +431,8 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         if (!window.isOpen()) break;
         if (enlace.getVida() <= 0) break;
 
+        rival.animacionIdle();
+        enlace.idlePelea();
         // texto de la vida del enemigo
         std::string textVE = nombreEnemigo + ": \n" + std::to_string(rival.getVida()) + " | " + vidaMaxEneg;
         mapita.setVidaEnemigo(textVE);

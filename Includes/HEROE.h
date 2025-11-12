@@ -27,6 +27,7 @@ class HEROE : public NPC {
         int getD();
         int getDEF();
         int getVID();
+        void idlePelea();
     private:
         bool _enBatalla;
         int _mana;
@@ -36,6 +37,8 @@ class HEROE : public NPC {
         sf::Sprite _sprite;
         sf::Texture _textura;
         sf::Vector2f _velocidad;
+        sf::Clock relojHeroe;
+        float tiempoHeroe=1;
         // para estadisticas
         int _M = 0;
         int _DR = 0;

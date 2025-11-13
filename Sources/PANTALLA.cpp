@@ -420,7 +420,8 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     std::string vidaMaxEneg = std::to_string(rival.getVida());
     std::string nombreEnemigo = rival.getNombre();
     std::string nombreHeroe = enlace.getNombre();
-
+    sf::Clock relojGolpe;
+    bool animacionGolpeando = false;
     while (rival.getVida() > 0) {
 
         while (const std::optional event = window.pollEvent())
@@ -431,8 +432,9 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         if (!window.isOpen()) break;
         if (enlace.getVida() <= 0) break;
 
-        rival.animacionIdle();
-        enlace.idlePelea();
+
+        rival.animacionIdle("IMG/GoblinPelea.png");
+
         // texto de la vida del enemigo
         std::string textVE = nombreEnemigo + ": \n" + std::to_string(rival.getVida()) + " | " + vidaMaxEneg;
         mapita.setVidaEnemigo(textVE);
@@ -459,14 +461,14 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
             window.draw(mapita.getE());
             window.draw(mapita.getH());
             //window.draw(lata);
-            window.draw(enlace);
-            window.draw(rival);
+
             window.draw(mapita.getTxt());
 
-        window.display();
+
 
         if (turnoH)
         {
+
             if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
             {
                 if (!botonApretado)
@@ -476,11 +478,14 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
                     if (mapita.getRectangles()[4].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
+
+                        animacionGolpeando = true;
+                        relojGolpe.restart();
                         mapita.setTexto(" PEGANDO ");
-                        enlace.golpear(rival);
-                        ataqueE.play(); // sonido ataque
-                        turnoH = false;
+
+
                     }
+
                     if (mapita.getRectangles()[5].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
                     {
                         mapita.setTexto(" DEFENDIENDO ");
@@ -508,6 +513,16 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                     }
                 } else {botonApretado = false;}
             }
+            if(animacionGolpeando==true){
+                enlace.animacionGolpe(relojGolpe);
+                if(relojGolpe.getElapsedTime().asSeconds()>=1.5){
+                    enlace.golpear(rival);
+                    animacionGolpeando=false;
+                    turnoH=false;
+                    ataqueE.play();
+                }
+            }
+            else{enlace.animacionIdle("IMG/EnlaceIdle.png");}
         }
 
         if(!turnoH && !enter) {
@@ -539,9 +554,11 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
             enter = false;
         }
+    window.draw(enlace);
+    window.draw(rival);
+    window.display();
 
     }
-
     if (enlace.getVida()<=0){
             MusicaPelea.stop();
             enlace.vivo = false;

@@ -34,13 +34,17 @@ class NPC : public sf::Drawable {
         void actualizar(MAPA&, int, int, sf::Clock&);
         void patrullar(int, int);
         int generarFuerza(int);
-        void animacionIdle();
+        void animacionIdle(std::string);
+        void animacionGolpe(sf::Clock &);
     protected:
         bool _estaDefendido = false;
         char _dialogo[200] = {};
         char _nombre[50] = {};
         int _vida;
         int _fuerza;
+        sf::Clock _relojEnemigo;
+        sf::Clock relojAnimacion;
+        float tiempoAnimacion=0.5;
     private:
         int _currentFrame;
         float _frameTime = 0.1f;
@@ -48,7 +52,5 @@ class NPC : public sf::Drawable {
         sf::Texture _textura;
         sf::Vector2f _velocidad;
         bool _moviendoDerecha = true;
-        sf::Clock _relojEnemigo;
-        sf::Clock relojAnimacion;
-        float tiempoAnimacion=1;
+
 };

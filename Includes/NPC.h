@@ -35,7 +35,7 @@ class NPC : public sf::Drawable {
         void patrullar(int, int);
         int generarFuerza(int);
         void animacionIdle(std::string);
-        void animacionGolpe(sf::Clock &);
+        void animacionGolpe(sf::Clock &, std::string);
     protected:
         bool _estaDefendido = false;
         char _dialogo[200] = {};

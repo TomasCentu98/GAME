@@ -447,9 +447,6 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         if (!window.isOpen()) break;
         if (enlace.getVida() <= 0) break;
 
-
-        rival.animacionIdle("IMG/GoblinPelea.png");
-
         // texto de la vida del enemigo
         std::string textVE = nombreEnemigo + ": \n" + std::to_string(rival.getVida()) + " | " + vidaMaxEneg;
         mapita.setVidaEnemigo(textVE);
@@ -464,7 +461,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         mapita.setVidaHeroe(textHeroe);
 
         // "IA" del enemigo
-        const int decisionRival = (rand() % 2) + 1;
+        const int decisionRival = 1/*(rand() % 2) + 1*/;
 
         window.clear(sf::Color::Black);
 
@@ -528,8 +525,8 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                     }
                 } else {botonApretado = false;}
             }
-            if(animacionGolpeando==true){
-                enlace.animacionGolpe(relojGolpe);
+            if(animacionGolpeando==true && turnoH){
+                enlace.animacionGolpe(relojGolpe, "IMG/EnlaceGolpe.png");
                 if(relojGolpe.getElapsedTime().asSeconds()>=1.5){
                     enlace.golpear(rival);
                     animacionGolpeando=false;
@@ -537,10 +534,9 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                     ataqueE.play();
                 }
             }
-            else{enlace.animacionIdle("IMG/EnlaceIdle.png");}
-        }
+        }else{enlace.animacionIdle("IMG/EnlaceIdle.png");}
 
-        if(!turnoH && !enter) {
+        if(!turnoH && !enter && !turnoE) {
             if (!turnoHecho) {
                 std::string text = mapita.getTexto() + '\n' + "Presione enter para terminar turno...";
                 mapita.setTexto(text);
@@ -555,11 +551,12 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
         if (turnoE && enter) {
             if (decisionRival == 1) {
+                animacionGolpeando = true;
+                relojGolpe.restart();
                 mapita.setTexto(" ENEMIGO PEGANDO ");
-                rival.golpear(enlace);
-                ataqueG.play(); // sonido ataque
-                turnoE = false;
-                turnoH = true;
+                //turnoE = true;
+               // ataqueG.play(); // sonido ataque
+
             } else {
                 mapita.setTexto(" ENEMIGO DEFENDIDO ");
                 rival.setDefensa(true);
@@ -567,8 +564,23 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                 turnoH = true;
             }
 
-            enter = false;
+                enter = false;
+
         }
+
+         if(animacionGolpeando==true && turnoE){
+                rival.animacionGolpe(relojGolpe, "IMG/GoblinGolpe.png");
+
+                if(relojGolpe.getElapsedTime().asSeconds()>=1.5){
+                    rival.golpear(enlace);
+                    animacionGolpeando=false;
+                    turnoE = false;
+                    turnoH = true;
+                    ataqueG.play();
+                }
+            }
+        else{rival.animacionIdle("IMG/GoblinPelea.png");}
+
     window.draw(enlace);
     window.draw(rival);
     window.display();

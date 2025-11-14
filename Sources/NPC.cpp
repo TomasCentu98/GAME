@@ -238,8 +238,8 @@ void NPC::animacionIdle(std::string img){
     }
 };
 
-void NPC::animacionGolpe(sf::Clock& relojGolpe){
-    _textura.loadFromFile("IMG/EnlaceGolpe.png");
+void NPC::animacionGolpe(sf::Clock& relojGolpe, std::string img){
+    _textura.loadFromFile(img);
     _sprite.setTexture(_textura);
     float tiempo=relojGolpe.getElapsedTime().asSeconds();
         if(tiempo<1.2){

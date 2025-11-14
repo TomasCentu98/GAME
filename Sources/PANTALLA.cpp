@@ -6,6 +6,7 @@
 #include "NPC_aux.h"
 #include <SFML/Audio.hpp>
 #include <cstring>
+#include <iostream>
 
 PANTALLA::PANTALLA() {}
 
@@ -56,6 +57,7 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     fclose(archivo);
 
     bool tuto = true;
+    bool salirDelJuego = false;
     bool enemigosCreadosPan1 = false;
     bool enemigosCreadosPan2 = false;
     bool enemigosCreadosPan3 = false;
@@ -65,7 +67,17 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>()) window.close();
+
+            if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyEvent->scancode == sf::Keyboard::Scancode::Escape) {
+                    if (pausa(window)) {
+                        salirDelJuego = true;
+                    }
+                }
+            }
         }
+
+        if (salirDelJuego) break;
 
         // MOVIMIENTO DE JUGADOR
         enlace.actualizar(mapa, _ANCHO, _LARGO, relojito);
@@ -275,6 +287,7 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
             enlace.resetear();
             tiempoDeJuego.restart();
             gameLoop(enlace, window);
+            musicamenu.play();
         }
 
         if (enlace.juegoFinalizado) {
@@ -294,7 +307,8 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
             enlace.juegoFinalizado = false;
         }
 
-        if (estadisticas.getGlobalBounds().contains({(float)sf::Mouse::getPosition(window).x , (float)sf::Mouse::getPosition(window).y})) {
+        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        if (estadisticas.getGlobalBounds().contains(mousePos)) {
             window.draw(textoEstadisticas);
         }
 
@@ -309,6 +323,7 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
                 pedirNombre(window, enlace);
                 tiempoDeJuego.restart();
                 gameLoop(enlace, window);
+                musicamenu.play();
             }
             if(botonCreditos.getGlobalBounds().contains(worldPos))
                 creditos(window);
@@ -473,10 +488,10 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
             {
                 if (!botonApretado)
                 {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
                     botonApretado = true;
 
-                    if (mapita.getRectangles()[4].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
+                    if (mapita.getRectangles()[4].getGlobalBounds().contains({mousePos.x , mousePos.y}))
                     {
 
                         animacionGolpeando = true;
@@ -486,7 +501,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
                     }
 
-                    if (mapita.getRectangles()[5].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
+                    if (mapita.getRectangles()[5].getGlobalBounds().contains({mousePos.x , mousePos.y}))
                     {
                         mapita.setTexto(" DEFENDIENDO ");
                         enlace.setDefensa(true);
@@ -494,7 +509,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                         defensaE.play(); // sonido defenza
                         turnoH = false;
                     }
-                    if (mapita.getRectangles()[6].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
+                    if (mapita.getRectangles()[6].getGlobalBounds().contains({mousePos.x , mousePos.y}))
                     {
                         mapita.setTexto(" CURANDO ");
                         enlace.curar();
@@ -503,7 +518,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                         curacionE.play(); // sonido curacion
                         turnoH = false;
                     }
-                    if (mapita.getRectangles()[7].getGlobalBounds().contains({(float)mousePos.x , (float)mousePos.y}))
+                    if (mapita.getRectangles()[7].getGlobalBounds().contains({mousePos.x , mousePos.y}))
                     {
                         mapita.setTexto(" PIU PIU ");
                         enlace.hechizo(rival);
@@ -871,6 +886,66 @@ void PANTALLA::pedirNombre(sf::RenderWindow &window, HEROE &enlace) {
             }
         }
 
+        window.display();
+    }
+}
+
+bool PANTALLA::pausa(sf::RenderWindow &window) {
+
+    sf::Font fuente("MAPAS/fuentePelea.ttf");
+
+    sf::Text textoPausa(fuente, "PAUSA", 50);
+    textoPausa.setPosition({350 , 200});
+
+    sf::RectangleShape fondo;
+    fondo.setSize({800 , 576});
+    fondo.setFillColor(sf::Color(30,50,30,150));
+
+    sf::RectangleShape continuar;
+    continuar.setSize({240 , 70});
+    continuar.setFillColor(sf::Color::Transparent);
+    continuar.setPosition({305 , 345});
+    continuar.setOutlineThickness(2);
+    continuar.setOutlineColor(sf::Color::White);
+    sf::Text textoContinuar(fuente, "CONTINUAR - ESCAPE", 20);
+    textoContinuar.setPosition({320 , 360});
+
+    sf::RectangleShape salir;
+    salir.setSize({240 , 60});
+    salir.setFillColor(sf::Color::Transparent);
+    salir.setPosition({305 , 445});
+    salir.setOutlineThickness(2);
+    salir.setOutlineColor(sf::Color::Red);
+    sf::Text textoSalir(fuente, "SALIR - ENTER", 24);
+    textoSalir.setPosition({335 , 460});
+    textoSalir.setFillColor(sf::Color::Red);
+
+    while(window.isOpen()){
+
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) window.close();
+
+            if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyEvent->scancode == sf::Keyboard::Scancode::Escape) {
+                    return false;
+                }
+            }
+
+            if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyEvent->scancode == sf::Keyboard::Scancode::Enter) {
+                    return true;
+                }
+            }
+        }
+
+        window.clear();
+        window.draw(fondo);
+        window.draw(textoPausa);
+        window.draw(continuar);
+        window.draw(textoContinuar);
+        window.draw(salir);
+        window.draw(textoSalir);
         window.display();
     }
 }

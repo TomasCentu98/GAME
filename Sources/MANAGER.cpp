@@ -12,7 +12,7 @@ void app() {
 
     sf::RenderWindow window(sf::VideoMode({pantalla->getAncho(), pantalla->getLargo()}), "My GAME");
     window.setFramerateLimit(60);
-    sf::Image img("IMG/GoblinFrente2.png");
+    sf::Image img("IMG/DragFrente2.png");
     window.setIcon(img);
 
     HEROE *enlace = new HEROE();
@@ -36,7 +36,7 @@ int* copiarDeArchivo(const char* nombreArchivo) {
     const int CANTIDAD_ARRAY = 475;
     int* listaCopiada = new int[CANTIDAD_ARRAY];
 
-    int numero = 0;
+    int numero = 0; // para saber cuantos numeros hay en el archivo
 
     if (!archivo) {
         return listaCopiada;

@@ -1,7 +1,7 @@
 #include "../Includes/HEROE.h"
 
 HEROE::HEROE() :
-    _textura("IMG/GoblinFrente2.png"),
+    _textura("IMG/cirujano.png"),
     _sprite(_textura)
 {
     _vida = 150;
@@ -32,7 +32,12 @@ void HEROE::golpear(NPC &obj) {
 }
 
 void HEROE::recibirGolpe(float cantGolpe) {
-    _vida -= cantGolpe;
+    if(_estaDefendido) {
+        _vida -= cantGolpe - defensa();
+        _estaDefendido = false;
+    }
+
+    if (!_estaDefendido) _vida -= cantGolpe;
 }
 
 void HEROE::victoria() {
@@ -79,19 +84,6 @@ void HEROE::resetear(){
     vivo = true;
     juegoFinalizado = false;
 }
-/*void HEROE::idlePelea(){
-
-    _textura.loadFromFile("IMG/EnlaceIdle.png");
-    _sprite.setTexture(_textura);
-
-    if(relojAnimacion.getElapsedTime().asSeconds()>tiempoAnimacion){
-        _sprite.setTextureRect({{0,0},{32,32}});
-    }
-    if(relojAnimacion.getElapsedTime().asSeconds()>tiempoAnimacion*2){
-        _sprite.setTextureRect({{32,0},{32,32}});
-        relojAnimacion.restart();
-    }
-};*/
 
 // para estadisticas
 void HEROE::setM(int manaUtilizado) {_M += manaUtilizado;}

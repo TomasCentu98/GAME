@@ -3,7 +3,7 @@
 #include <cstring>
 
 NPC::NPC() :
-    _textura("IMG/GoblinFrente2.png"),
+    _textura("IMG/cirujano.png"),
     _sprite(_textura)
 {
     _vida = 100;
@@ -48,7 +48,10 @@ char* NPC::getDialogo(){
 };
 
 void NPC::recibirGolpe(int cantGolpe) {
-    if(_estaDefendido) _vida -= cantGolpe - defensa();
+    if(_estaDefendido) {
+        _vida -= cantGolpe - defensa();
+        _estaDefendido = false;
+    }
 
     if (!_estaDefendido) _vida -= cantGolpe;
 }
@@ -229,27 +232,38 @@ void NPC::animacionIdle(std::string img){
     _sprite.setTexture(_textura);
 
     if(relojAnimacion.getElapsedTime().asSeconds()>tiempoAnimacion){
-      _sprite.setTextureRect({{0,0},{32,32}});
+      _sprite.setTextureRect({{0,0},{64,64}});
     }
 
     if(relojAnimacion.getElapsedTime().asSeconds()>tiempoAnimacion*2){
-      _sprite.setTextureRect({{32,0},{32,32}});
+      _sprite.setTextureRect({{64,0},{64,64}});
       relojAnimacion.restart();
     }
-};
+}
 
-void NPC::animacionGolpe(sf::Clock& relojGolpe, std::string img){
+void NPC::animacionGolpe(std::string img){
+
     _textura.loadFromFile(img);
     _sprite.setTexture(_textura);
-    float tiempo=relojGolpe.getElapsedTime().asSeconds();
-        if(tiempo<1.2){
-            _sprite.setTextureRect({{64,0},{32,32}});
-        }
-        if(tiempo<1){
-            _sprite.setTextureRect({{32,0},{32,32}});
-        }
-        if(tiempo<0.5){
-            _sprite.setTextureRect({{0,0},{32,32}});
-        }
-};
+    float tiempo = relojGolpe.getElapsedTime().asSeconds();
 
+    if (tiempo < tiempoAnimacion) {
+        _sprite.setTextureRect({{0,0},{64,64}});
+    }
+    else if (tiempo < tiempoAnimacion * 2) {
+        _sprite.setTextureRect({{64,0},{64,64}});
+    }
+    else {
+        _sprite.setTextureRect({{128,0},{64,64}});
+    }
+
+    if (tiempo >= 1.5) relojGolpe.restart();
+}
+
+void NPC::explotar () {
+
+
+
+
+
+}

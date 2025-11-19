@@ -19,6 +19,11 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     sf::Clock relojito;
     enlace.posicionar(561 , 432);
 
+    sf::Clock tiempitoJugado;
+    sf::Font fuente("MAPAS/fuentePelea.ttf");
+    sf::Text tiempoDeJuego(fuente, "asd", 24);
+    tiempoDeJuego.setPosition({32 , 5});
+
     NPC vagabundo;
     vagabundo.setSprite("IMG/cirujano.png");
     vagabundo.setNombre("charly");
@@ -39,7 +44,6 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
 
     NPC jefe = leerEnemigo();
     jefe.setSprite("IMG/DragFrente2.png");
-
 
     bool tuto = true;
     bool salirDelJuego = false;
@@ -207,7 +211,14 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
 
         if (jefe.getVida() < 0) enlace.juegoFinalizado = true;
 
-        if (enlace.juegoFinalizado) break;
+        if (enlace.juegoFinalizado) {
+                // texto loco de fin
+                break;
+        }
+
+        std::string tiempo = "Tiempo: " + std::to_string((int)tiempitoJugado.getElapsedTime().asSeconds()) + " seg.";
+        tiempoDeJuego.setString(tiempo);
+        window.draw(tiempoDeJuego);
 
         window.display();
     }
@@ -271,6 +282,7 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
             musicamenu.stop();
             enlace.resetear();
             tiempoDeJuego.restart();
+            pantallaExplicativa(window);
             gameLoop(enlace, window);
             musicamenu.play();
         }
@@ -307,6 +319,7 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
                 musicamenu.stop();
                 pedirNombre(window, enlace);
                 tiempoDeJuego.restart();
+                pantallaExplicativa(window);
                 gameLoop(enlace, window);
                 musicamenu.play();
             }
@@ -470,12 +483,12 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                     {
                         animacionGolpeando = true;
                         relojGolpe.restart();
-                        mapita.setTexto(" PEGANDO ");
+                        mapita.setTexto(" Toma gil ");
                     }
 
                     if (mapita.getRectangles()[5].getGlobalBounds().contains({mousePos.x , mousePos.y}))
                     {
-                        mapita.setTexto(" DEFENDIENDO ");
+                        mapita.setTexto(" para gato ");
                         enlace.setDefensa(true);
                         enlace.setDEF(1);
                         defensaE.play(); // sonido defenza
@@ -483,7 +496,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                     }
                     if (mapita.getRectangles()[6].getGlobalBounds().contains({mousePos.x , mousePos.y}))
                     {
-                        mapita.setTexto(" CURANDO ");
+                        mapita.setTexto(" *toma birra para rejuvencerse* ");
                         enlace.curar();
                         enlace.setVID(1);
                         enlace.setM(20);
@@ -492,7 +505,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                     }
                     if (mapita.getRectangles()[7].getGlobalBounds().contains({mousePos.x , mousePos.y}))
                     {
-                        mapita.setTexto(" PIU PIU ");
+                        mapita.setTexto(" Comela atrevido ");
                         enlace.hechizo(rival);
                         enlace.setM(30);
                         hechizoE.play(); // sonido hechizo
@@ -501,7 +514,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                 } else {botonApretado = false;}
             }
 
-            if(animacionGolpeando==true && turnoH){
+            if (animacionGolpeando==true && turnoH){
                 enlace.animacionGolpe("IMG/EnlaceGolpe.png");
                 if(relojGolpe.getElapsedTime().asSeconds()>=1.5){
                     enlace.golpear(rival);
@@ -532,10 +545,10 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
             if (decisionRival == 1) {
                 animacionGolpeando = true;
                 relojGolpe.restart();
-                mapita.setTexto(" ENEMIGO PEGANDO ");
+                mapita.setTexto(" rescatate gato ");
 
             } else {
-                mapita.setTexto(" ENEMIGO DEFENDIDO ");
+                mapita.setTexto(" que onda 'migo no flashe ");
                 rival.setDefensa(true);
                 turnoE = false;
                 turnoH = true;
@@ -559,7 +572,7 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         window.draw(enlace);
         window.draw(rival);
 
-         if (enlace.getDefensa()) {
+        if (enlace.getDefensa()) {
             escudo.setPosition({235.f, 230.f});
             window.draw(escudo);
         }
@@ -581,6 +594,37 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
             enlace.setSprite("IMG/Enlace.png");
             rival.setSprite("IMG/Goblin.png");
             return;
+    }
+
+    if (rival.getVida() <= 0) {
+        rival.setSprite("IMG/explotar.png");
+        sf::SoundBuffer explBuffer("Efectos/explosion.ogg");
+        sf::Sound explosion(explBuffer);
+        explosion.play();
+        bool enterFin = false;
+
+        while(!enterFin) {
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+                enterFin = true;
+                break;
+            }
+
+            mapita.setTexto("VictoriaaaAAA... apreta enter pa' seguir");
+
+            window.clear();
+
+            for (int cuadro=0; cuadro < 8; cuadro++)
+            {
+                window.draw(mapita.getRectangles()[cuadro]);
+            }
+            window.draw(enlace);
+            window.draw(rival);
+            window.draw(mapita.getE());
+            window.draw(mapita.getH());
+            window.draw(mapita.getTxt());
+            window.display();
+        }
     }
 
     cortinaInicio(window);
@@ -945,6 +989,63 @@ bool PANTALLA::pausa(sf::RenderWindow &window) {
         window.draw(textoContinuar);
         window.draw(salir);
         window.draw(textoSalir);
+        window.display();
+    }
+}
+
+void PANTALLA::pantallaExplicativa(sf::RenderWindow &window) {
+    sf::Font fuente("MAPAS/fuentePelea.ttf");
+    bool leido = false;
+
+    sf::Text textoTitulo(fuente, "INTRODUCCION", 35);
+    textoTitulo.setPosition({250 , 100});
+
+    sf::RectangleShape fondo;
+    sf::Texture texturaFondo("IMG/fondoPelea.png");
+    fondo.setSize({800 , 576});
+    fondo.setTexture(&texturaFondo);
+
+    sf::Text textoExplicativo(fuente, "asd", 18);
+    textoExplicativo.setPosition({70 , 200});
+
+    std::string uno = "Sales cansado del trabajo, te preparas para comer un poco \n";
+    std::string dos = "Sin saberlo te quedaste dormido \n Sientes que alguien esta moviendo cosas cerca tuyo \n";
+    std::string tres = "Te despiertas y te das cuenta que tus cosas faltan \n Anda a hablar con ese vago capaz que el vio algo";
+
+    std::string textoLargooo = uno + dos + tres;
+
+    textoExplicativo.setString(textoLargooo);
+
+    sf::RectangleShape continuar;
+    continuar.setSize({240 , 70});
+    continuar.setFillColor(sf::Color::Transparent);
+    continuar.setPosition({255 , 345});
+    continuar.setOutlineThickness(2);
+    continuar.setOutlineColor(sf::Color::White);
+
+    sf::Text textoContinuar(fuente, "CONTINUAR - ENTER", 20);
+    textoContinuar.setPosition({270 , 360});
+
+    while(window.isOpen() && !leido){
+
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) window.close();
+
+            if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyEvent->scancode == sf::Keyboard::Scancode::Enter) {
+                    leido = true;
+                    break;
+                }
+            }
+        }
+
+        window.clear();
+        window.draw(fondo);
+        window.draw(textoTitulo);
+        window.draw(textoExplicativo);
+        window.draw(textoContinuar);
+        window.draw(continuar);
         window.display();
     }
 }

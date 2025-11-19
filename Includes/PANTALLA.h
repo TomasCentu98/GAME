@@ -16,6 +16,7 @@ public:
     void mostrarEstadisticas(sf::RenderWindow&, HEROE&, float);
     void pedirNombre(sf::RenderWindow &, HEROE &);
     bool pausa(sf::RenderWindow &window);
+    void pantallaExplicativa(sf::RenderWindow &window);
     unsigned int getAncho();
     unsigned int getLargo();
     ~PANTALLA();

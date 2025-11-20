@@ -51,9 +51,9 @@ void NPC::recibirGolpe(int cantGolpe) {
     if(_estaDefendido) {
         _vida -= cantGolpe - defensa();
         _estaDefendido = false;
+    } else {
+    _vida -= cantGolpe;
     }
-
-    if (!_estaDefendido) _vida -= cantGolpe;
 }
 
 int NPC::calcularGolpe(int fuerza) {
@@ -67,7 +67,7 @@ void NPC::golpear(HEROE &heroe) {
 }
 
 int NPC::defensa() {
-    int defendido = (rand() % 5) + 1;
+    int defendido = (rand() % 10) + 5;
     return defendido;
 }
 
@@ -260,10 +260,5 @@ void NPC::animacionGolpe(std::string img){
     if (tiempo >= 1.5) relojGolpe.restart();
 }
 
-void NPC::explotar () {
-
-
-
-
-
-}
+void NPC::setRango(bool esJefe) { _esJefe = esJefe; }
+bool NPC::getRango() { return _esJefe; }

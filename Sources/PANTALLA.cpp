@@ -34,15 +34,25 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
     arbol.setTexture(&textArbol);
     arbol.setPosition({260.f, 150.f});
 
-    NPC eneg1pan1 = leerEnemigo();
+    NPC eneg1pan1;
+    eneg1pan1.setRango(false);
+    leerEnemigo(eneg1pan1);
 
-    NPC eneg2pan1 = leerEnemigo();
+    NPC eneg2pan1;
+    eneg2pan1.setRango(false);
+    leerEnemigo(eneg2pan1);
 
-    NPC eneg1pan2 = leerEnemigo();
+    NPC eneg1pan2;
+    eneg1pan2.setRango(false);
+    leerEnemigo(eneg1pan2);
 
-    NPC eneg2pan2 = leerEnemigo();
+    NPC eneg2pan2;
+    eneg2pan2.setRango(false);
+    leerEnemigo(eneg2pan2);
 
-    NPC jefe = leerEnemigo();
+    NPC jefe;
+    jefe.setRango(true);
+    leerEnemigo(jefe);
     jefe.setSprite("IMG/DragFrente2.png");
 
     bool tuto = true;
@@ -369,9 +379,13 @@ void PANTALLA::creditos(sf::RenderWindow &window) {
 
 void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
+
     // MUSICA DE FONDO
     sf::Music MusicaPelea;
-    MusicaPelea.openFromFile("Musica/Pelea.ogg");
+
+    if (rival.getRango()) { MusicaPelea.openFromFile("Musica/Pelea.ogg"); }
+    else { MusicaPelea.openFromFile("Musica/Pelea.ogg"); }
+
     MusicaPelea.play();
     MusicaPelea.setLooping(true);
     MusicaPelea.setVolume(5);
@@ -394,7 +408,8 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     sf::Sound curacionE(curacionEnlace);
 
     sf::SoundBuffer ataqueGoblin;
-    ataqueGoblin.loadFromFile("Efectos/Herida.ogg");
+    if (rival.getRango()) { ataqueGoblin.loadFromFile("Efectos/Golpe-de-jefe.ogg"); }
+    else {  ataqueGoblin.loadFromFile("Efectos/Herida.ogg"); }
     sf::Sound ataqueG(ataqueGoblin);
 
     // toma las posiciones para devolverlos al terminar
@@ -558,7 +573,9 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
         }
 
         if (animacionGolpeando==true && turnoE){
-            rival.animacionGolpe("IMG/GoblinGolpe.png");
+            if (rival.getRango()) {
+                rival.animacionGolpe("IMG/JefeGolpe.png");
+            } else { rival.animacionGolpe("IMG/GoblinGolpe.png"); }
 
             if(relojGolpe.getElapsedTime().asSeconds()>=1.5){
                 rival.golpear(enlace);
@@ -567,7 +584,10 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
                 turnoH = true;
                 ataqueG.play();
             }
-        } else { rival.animacionIdle("IMG/GoblinPelea.png"); }
+        } else {
+            if (rival.getRango()) { rival.animacionIdle("IMG/JefeIdle.png"); }
+            else { rival.animacionIdle("IMG/GoblinPelea.png"); }
+        }
 
         window.draw(enlace);
         window.draw(rival);
@@ -628,10 +648,9 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
     }
 
     cortinaInicio(window);
-
-    enlace.setVida(100.f);
-    enlace.setMana(100);
     enlace.victoria();
+    enlace.setVida(enlace.getVidaMax());
+    enlace.setMana(100);
     enlace.setBatallando(false);
     enlace.posicionar(posEnlace.x, posEnlace.y);
     enlace.setSprite("IMG/Enlace.png");

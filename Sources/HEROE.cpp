@@ -5,6 +5,7 @@ HEROE::HEROE() :
     _sprite(_textura)
 {
     _vida = 150;
+    _vidaMax = 150;
     _fuerza = 15;
     _exp = 0;
     _lvl = 1;
@@ -35,27 +36,21 @@ void HEROE::recibirGolpe(float cantGolpe) {
     if(_estaDefendido) {
         _vida -= cantGolpe - defensa();
         _estaDefendido = false;
-    }
-
-    if (!_estaDefendido) _vida -= cantGolpe;
+    } else { _vida -= cantGolpe; }
 }
 
 void HEROE::victoria() {
-    _exp += 25;
-
-    if (_exp >= 50) {
-        _exp = 0;
-        _lvl++;
-        _fuerza += 3;
-        _vida += 15;
-    }
+    _lvl++;
+    _fuerza += 3;
+    _vida += 15;
+    _vidaMax += 15;
 }
 
 void HEROE::curar(){
     if(_mana >=20){
-        if(_vida<100){
+        if(_vida<_vidaMax){
             _vida+=20;
-            if(_vida>100){
+            if(_vida>_vidaMax){
                 _vida=100;
             }
         }
@@ -97,3 +92,11 @@ int HEROE::getDR() {return _DR;}
 int HEROE::getD() {return _D;}
 int HEROE::getDEF() {return _DEF;}
 int HEROE::getVID() {return _VID;}
+
+int HEROE::getVidaMax() {
+    return _vidaMax;
+}
+
+int HEROE::calcularGolpe(int fuerza) {
+    return (rand() % _fuerza) + 5 * _lvl;
+}

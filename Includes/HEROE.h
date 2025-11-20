@@ -16,6 +16,7 @@ class HEROE : public NPC {
         bool vivo=true;
         bool juegoFinalizado=false;
         void resetear();
+        int calcularGolpe(int);
         // para estadisticas
         void setM(int);
         void setDR(int);
@@ -28,9 +29,11 @@ class HEROE : public NPC {
         int getDEF();
         int getVID();
         void idlePelea();
+        int getVidaMax();
     private:
         bool _enBatalla;
         int _mana;
+        int _vidaMax;
         int _exp;
         int _lvl;
         sf::Vector2f _spriteSize;

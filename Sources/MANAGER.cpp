@@ -104,19 +104,29 @@ char* dialogosTuto(int dialogo){
     return dialogoEnArchivo;
 }
 
-NPC leerEnemigo() {
+void leerEnemigo(NPC &enemigo) {
 
-    FILE *archivo = fopen("enemigos.dat", "rb");
-    NPC enemigo;
+    FILE *archivo;
 
-    if(archivo==nullptr) return enemigo;
+    if (enemigo.getRango()) { archivo = fopen("jefe.dat", "rb"); }
+    else { archivo = fopen("enemigos.dat", "rb"); }
+
+    if(archivo==nullptr) return;
 
     NPC_aux enemigoAux;
 
     int enemigoEnArchivo = (rand()%4);
     fseek(archivo, sizeof(NPC_aux) * enemigoEnArchivo, SEEK_SET);
 
-    if (fread(&enemigoAux, sizeof(NPC_aux), 1, archivo)) {
+    if (enemigo.getRango()) {
+        fread(&enemigoAux, sizeof(NPC_aux), 1, archivo);
+        enemigo.setNombre(enemigoAux.getNombre());
+        enemigo.setDialogo(enemigoAux.getDialogo());
+        enemigo.setSprite("IMG/DragFrente2.png");
+        enemigo.setVida(enemigoAux.getVida());
+        enemigo.setFuerza(enemigoAux.getFuerza());
+    } else {
+        fread(&enemigoAux, sizeof(NPC_aux), 1, archivo);
         enemigo.setNombre(enemigoAux.getNombre());
         enemigo.setDialogo(enemigoAux.getDialogo());
         enemigo.setSprite("IMG/goblin.png");
@@ -125,8 +135,6 @@ NPC leerEnemigo() {
     }
 
     fclose(archivo);
-
-    return enemigo;
 }
 
 

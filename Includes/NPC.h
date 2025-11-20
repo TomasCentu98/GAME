@@ -20,6 +20,8 @@ class NPC : public sf::Drawable {
         char * getDialogo();
         void recibirGolpe(int);
         int calcularGolpe(int);
+        void setRango(bool);
+        bool getRango();
         /****/
         sf::Vector2f getVelocidad();
         void setVelocidad(float, float);
@@ -55,5 +57,5 @@ class NPC : public sf::Drawable {
         sf::Texture _textura;
         sf::Vector2f _velocidad;
         bool _moviendoDerecha = true;
-
+        bool _esJefe = false;
 };

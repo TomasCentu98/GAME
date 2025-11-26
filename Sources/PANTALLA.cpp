@@ -222,8 +222,8 @@ void PANTALLA::gameLoop(HEROE &enlace, sf::RenderWindow &window) {
         if (jefe.getVida() < 0) enlace.juegoFinalizado = true;
 
         if (enlace.juegoFinalizado) {
-                // texto loco de fin
-                break;
+            pantallaEnding(window);
+            break;
         }
 
         std::string tiempo = "Tiempo: " + std::to_string((int)tiempitoJugado.getElapsedTime().asSeconds()) + " seg.";
@@ -832,6 +832,9 @@ void PANTALLA::gameOver(sf::RenderWindow &window, HEROE &enlace){
 
         window.display();
     }
+
+    GameOverMusica.stop();
+
     delete musiquitaGO;
 }
 
@@ -1054,6 +1057,63 @@ void PANTALLA::pantallaExplicativa(sf::RenderWindow &window) {
             if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
                 if (keyEvent->scancode == sf::Keyboard::Scancode::Enter) {
                     leido = true;
+                    break;
+                }
+            }
+        }
+
+        window.clear();
+        window.draw(fondo);
+        window.draw(textoTitulo);
+        window.draw(textoExplicativo);
+        window.draw(textoContinuar);
+        window.draw(continuar);
+        window.display();
+    }
+}
+
+void PANTALLA::pantallaEnding(sf::RenderWindow &window) {
+    sf::Font fuente("MAPAS/fuentePelea.ttf");
+    bool leidoEnding = false;
+
+    sf::Text textoTitulo(fuente, "FELICIDADESSSSS", 35);
+    textoTitulo.setPosition({250 , 100});
+
+    sf::RectangleShape fondo;
+    sf::Texture texturaFondo("IMG/fondoPelea.png");
+    fondo.setSize({800 , 576});
+    fondo.setTexture(&texturaFondo);
+
+    sf::Text textoExplicativo(fuente, "asd", 18);
+    textoExplicativo.setPosition({70 , 200});
+
+    std::string uno = "Finalmente derrotas al malvado jefe goblin \n";
+    std::string dos = "Recuperas todas tus cosas \n Te preparas para emprender el regreso a tu casa\n";
+    std::string tres = "Ya puedes disfrutar de tu recompensa, la gran milanesa";
+
+    std::string textoLargooo = uno + dos + tres;
+
+    textoExplicativo.setString(textoLargooo);
+
+    sf::RectangleShape continuar;
+    continuar.setSize({240 , 70});
+    continuar.setFillColor(sf::Color::Transparent);
+    continuar.setPosition({255 , 345});
+    continuar.setOutlineThickness(2);
+    continuar.setOutlineColor(sf::Color::White);
+
+    sf::Text textoContinuar(fuente, "CONTINUAR - ENTER", 20);
+    textoContinuar.setPosition({270 , 360});
+
+    while(window.isOpen() && !leidoEnding){
+
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) window.close();
+
+            if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyEvent->scancode == sf::Keyboard::Scancode::Enter) {
+                    leidoEnding = true;
                     break;
                 }
             }

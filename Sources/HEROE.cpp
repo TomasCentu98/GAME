@@ -70,7 +70,7 @@ int HEROE::getMana(){
 }
 
 void HEROE::resetear(){
-   _vida = 150;
+    _vida = 150;
     _fuerza = 15;
     _exp = 0;
     _lvl = 1;
@@ -78,6 +78,11 @@ void HEROE::resetear(){
     _enBatalla = false;
     vivo = true;
     juegoFinalizado = false;
+    _M = 0;
+    _DR = 0;
+    _D = 0;
+    _DEF = 0;
+    _VID = 0;
 }
 
 // para estadisticas

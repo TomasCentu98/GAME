@@ -330,6 +330,7 @@ void PANTALLA::menu(sf::RenderWindow &window, HEROE &enlace) {
                 pedirNombre(window, enlace);
                 tiempoDeJuego.restart();
                 pantallaExplicativa(window);
+                enlace.resetear();
                 gameLoop(enlace, window);
                 musicamenu.play();
             }
@@ -632,6 +633,9 @@ void PANTALLA::pelea(NPC &rival, HEROE &enlace, sf::RenderWindow &window) {
 
             mapita.setTexto("VictoriaaaAAA... apreta enter pa' seguir");
 
+            std::string textVE = nombreEnemigo + ": \n" + '0' + " | " + vidaMaxEneg;
+            mapita.setVidaEnemigo(textVE);
+
             window.clear();
 
             for (int cuadro=0; cuadro < 8; cuadro++)
@@ -822,18 +826,21 @@ void PANTALLA::gameOver(sf::RenderWindow &window, HEROE &enlace){
 
             if(botonContinuar.getGlobalBounds().contains(worldPos)) {
                 reset = true;
+                GameOverMusica.stop();
                 break;
             }
 
             if(botonSalir.getGlobalBounds().contains(worldPos)) {
-                menu(window, enlace);
+                GameOverMusica.stop();
+                break;
+                //menu(window, enlace);
             }
         }
 
         window.display();
     }
 
-    GameOverMusica.stop();
+
 
     delete musiquitaGO;
 }

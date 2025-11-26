@@ -115,8 +115,10 @@ void leerEnemigo(NPC &enemigo) {
 
     NPC_aux enemigoAux;
 
-    int enemigoEnArchivo = (rand()%4);
-    fseek(archivo, sizeof(NPC_aux) * enemigoEnArchivo, SEEK_SET);
+    if (!enemigo.getRango()) {
+        int enemigoEnArchivo = (rand()%4);
+        fseek(archivo, sizeof(NPC_aux) * enemigoEnArchivo, SEEK_SET);
+    }
 
     if (enemigo.getRango()) {
         fread(&enemigoAux, sizeof(NPC_aux), 1, archivo);
